@@ -116,7 +116,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // State entities initialized from mockData with persistence in localStorage if available
   const [profile, setProfile] = useState<PAEETProfile>(() => {
-    const saved = localStorage.getItem('paeet_profile');
+    const saved = localStorage.getItem('paeet_profile_v2');
     return saved ? JSON.parse(saved) : initialProfile;
   });
 
@@ -124,7 +124,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [turmas] = useState<Turma[]>(initialTurmas);
 
   const [estudantes, setEstudantes] = useState<Estudante[]>(() => {
-    const saved = localStorage.getItem('paeet_estudantes');
+    const saved = localStorage.getItem('paeet_estudantes_v2');
     return saved ? JSON.parse(saved) : initialEstudantes;
   });
 
@@ -159,7 +159,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [boletins, setBoletins] = useState<BoletimEstudante[]>(() => {
-    const saved = localStorage.getItem('paeet_boletins');
+    const saved = localStorage.getItem('paeet_boletins_v2');
     return saved ? JSON.parse(saved) : initialBoletins;
   });
 
@@ -183,10 +183,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Sync to local storage
   useEffect(() => {
-    localStorage.setItem('paeet_profile', JSON.stringify(profile));
+    localStorage.setItem('paeet_profile_v2', JSON.stringify(profile));
   }, [profile]);
   useEffect(() => {
-    localStorage.setItem('paeet_estudantes', JSON.stringify(estudantes));
+    localStorage.setItem('paeet_estudantes_v2', JSON.stringify(estudantes));
   }, [estudantes]);
   useEffect(() => {
     localStorage.setItem('paeet_empresas', JSON.stringify(empresas));
@@ -201,7 +201,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_reconhecimentos', JSON.stringify(reconhecimentosList));
   }, [reconhecimentosList]);
   useEffect(() => {
-    localStorage.setItem('paeet_boletins', JSON.stringify(boletins));
+    localStorage.setItem('paeet_boletins_v2', JSON.stringify(boletins));
   }, [boletins]);
   useEffect(() => {
     localStorage.setItem('paeet_documentos_pdf', JSON.stringify(documentosPDF));

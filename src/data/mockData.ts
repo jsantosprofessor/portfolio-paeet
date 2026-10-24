@@ -15,14 +15,16 @@ import {
   AuditLog,
   AuthUser
 } from '../types';
+import { alunosAtivosMonsenhor, boletinsAtivosMonsenhor, turmaMonsenhor2C } from './alunosReaisMapao';
 
 export const initialProfile: PAEETProfile = {
   nome: 'Prof. Jefferson Santos',
   cargo: 'Professor de Apoio ao Estudante do Ensino Técnico (PAEET)',
-  unidadeEscolar: 'E.E. Prof. Geraldo Prestes de Albuquerque (Novotec Integrado)',
-  diretoriaEnsino: 'Diretoria Regional de Ensino — Região do Vale do Paraíba / SEDUC-SP',
-  cidade: 'São José dos Campos / Taubaté - SP',
-  anoLetivo: 2025,
+  unidadeEscolar: 'E.E. Monsenhor João Alves (Novotec Integrado)',
+  diretoriaEnsino: 'Diretoria Regional de Ensino — Região de Taubaté / SEDUC-SP',
+  cidade: 'Taubaté - SP',
+  anoLetivo: 2026,
+  diretorNome: 'GUSTAVO NASSER VARGAS DE OLIVEIRA',
   email: 'paeet.ensinatecnico@educacao.sp.gov.br',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
   registroFuncional: 'RG 34.892.110-X / SEDUC-SP',
@@ -70,150 +72,16 @@ export const initialCursos: CursoTecnico[] = [
 ];
 
 export const initialTurmas: Turma[] = [
-  { id: '1a-ds', nome: '1ª Série A - Desenv. de Sistemas', cursoId: 'ds', serie: '1ª Série', periodo: 'Integral', anoLetivo: 2025, totalAlunos: 36 },
-  { id: '2a-ds', nome: '2ª Série A - Desenv. de Sistemas', cursoId: 'ds', serie: '2ª Série', periodo: 'Integral', anoLetivo: 2025, totalAlunos: 34 },
-  { id: '3a-ds', nome: '3ª Série A - Desenv. de Sistemas', cursoId: 'ds', serie: '3ª Série', periodo: 'Integral', anoLetivo: 2025, totalAlunos: 31 },
-  { id: '2a-adm', nome: '2ª Série B - Administração', cursoId: 'adm', serie: '2ª Série', periodo: 'Tarde', anoLetivo: 2025, totalAlunos: 38 },
-  { id: '2a-log', nome: '2ª Série C - Logística', cursoId: 'log', serie: '2ª Série', periodo: 'Manhã', anoLetivo: 2025, totalAlunos: 35 },
-  { id: '1a-em1', nome: '1º Ano A - Ensino Médio Regular', cursoId: 'ds', serie: '1ª Série', periodo: 'Manhã', anoLetivo: 2025, totalAlunos: 40 },
-  { id: '1a-em2', nome: '1º Ano B - Ensino Médio Regular', cursoId: 'adm', serie: '1ª Série', periodo: 'Tarde', anoLetivo: 2025, totalAlunos: 42 }
+  turmaMonsenhor2C,
+  { id: '1a-ds', nome: '1ª Série A - Desenv. de Sistemas', cursoId: 'ds', serie: '1ª Série', periodo: 'Integral', anoLetivo: 2026, totalAlunos: 36 },
+  { id: '2a-ds', nome: '2ª Série A - Desenv. de Sistemas', cursoId: 'ds', serie: '2ª Série', periodo: 'Integral', anoLetivo: 2026, totalAlunos: 34 },
+  { id: '3a-ds', nome: '3ª Série A - Desenv. de Sistemas', cursoId: 'ds', serie: '3ª Série', periodo: 'Integral', anoLetivo: 2026, totalAlunos: 31 },
+  { id: '2a-adm', nome: '2ª Série B - Administração', cursoId: 'adm', serie: '2ª Série', periodo: 'Tarde', anoLetivo: 2026, totalAlunos: 38 },
+  { id: '2a-log', nome: '2ª Série C - Logística', cursoId: 'log', serie: '2ª Série', periodo: 'Manhã', anoLetivo: 2026, totalAlunos: 35 }
 ];
 
 export const initialEstudantes: Estudante[] = [
-  {
-    id: 'est-1',
-    nomeCompleto: 'Gabriel Mendonça de Oliveira',
-    nomeAnonimizado: 'Estudante G.M.O. (2ª A DS)',
-    ra: '112.443.901-2 SP',
-    turmaId: '2a-ds',
-    cursoId: 'ds',
-    statusMatricula: 'Ativo',
-    frequenciaGeral: 96.5,
-    situacaoAcademica: 'Progressão',
-    mediaGeral: 9.2,
-    estagioStatus: 'Inserido',
-    empresaEstagio: 'Stefanini IT Solutions',
-    bolsaValor: 1100,
-    telefoneContato: '(12) 99821-4412',
-    email: 'gabriel.mendonca@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-2',
-    nomeCompleto: 'Beatriz Vasconcelos Ribeiro',
-    nomeAnonimizado: 'Estudante B.V.R. (3ª A DS)',
-    ra: '110.887.321-4 SP',
-    turmaId: '3a-ds',
-    cursoId: 'ds',
-    statusMatricula: 'Ativo',
-    frequenciaGeral: 98.0,
-    situacaoAcademica: 'Progressão',
-    mediaGeral: 9.6,
-    estagioStatus: 'Inserido',
-    empresaEstagio: 'Embraer — Tech & Software Lab',
-    bolsaValor: 1350,
-    telefoneContato: '(12) 99742-1100',
-    email: 'beatriz.vasconcelos@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-3',
-    nomeCompleto: 'Lucas Henrique de Souza',
-    nomeAnonimizado: 'Estudante L.H.S. (2ª A DS)',
-    ra: '114.772.109-8 SP',
-    turmaId: '2a-ds',
-    cursoId: 'ds',
-    statusMatricula: 'Em Acompanhamento',
-    frequenciaGeral: 81.2,
-    situacaoAcademica: 'Progressão',
-    mediaGeral: 7.4,
-    estagioStatus: 'Encaminhado',
-    empresaEstagio: 'TOTVS Vale do Paraíba',
-    bolsaValor: 950,
-    telefoneContato: '(12) 99123-5599',
-    email: 'lucas.souza@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-4',
-    nomeCompleto: 'Camila Fernandes Silveira',
-    nomeAnonimizado: 'Estudante C.F.S. (2ª B ADM)',
-    ra: '113.551.487-1 SP',
-    turmaId: '2a-adm',
-    cursoId: 'adm',
-    statusMatricula: 'Ativo',
-    frequenciaGeral: 94.0,
-    situacaoAcademica: 'Progressão',
-    mediaGeral: 8.8,
-    estagioStatus: 'Inserido',
-    empresaEstagio: 'Johnson & Johnson / Kenvue',
-    bolsaValor: 1200,
-    telefoneContato: '(12) 99655-3211',
-    email: 'camila.silveira@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-5',
-    nomeCompleto: 'Matheus Rodrigues Nogueira',
-    nomeAnonimizado: 'Estudante M.R.N. (2ª C LOG)',
-    ra: '115.334.908-0 SP',
-    turmaId: '2a-log',
-    cursoId: 'log',
-    statusMatricula: 'Em Acompanhamento',
-    frequenciaGeral: 74.5,
-    situacaoAcademica: 'Regressão',
-    mediaGeral: 5.8,
-    estagioStatus: 'Aguardando',
-    telefoneContato: '(12) 98841-2309',
-    email: 'matheus.nogueira@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-6',
-    nomeCompleto: 'Isabela Cristina Prado',
-    nomeAnonimizado: 'Estudante I.C.P. (2ª A DS)',
-    ra: '112.909.112-7 SP',
-    turmaId: '2a-ds',
-    cursoId: 'ds',
-    statusMatricula: 'Ativo',
-    frequenciaGeral: 92.4,
-    situacaoAcademica: 'Progressão',
-    mediaGeral: 8.5,
-    estagioStatus: 'Inserido',
-    empresaEstagio: 'Gerdau — Unidade Pindamonhangaba',
-    bolsaValor: 1100,
-    telefoneContato: '(12) 99341-8765',
-    email: 'isabela.prado@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-7',
-    nomeCompleto: 'Felipe Augusto Barreto',
-    nomeAnonimizado: 'Estudante F.A.B. (3ª A DS)',
-    ra: '111.450.998-3 SP',
-    turmaId: '3a-ds',
-    cursoId: 'ds',
-    statusMatricula: 'Ativo',
-    frequenciaGeral: 95.8,
-    situacaoAcademica: 'Progressão',
-    mediaGeral: 9.1,
-    estagioStatus: 'Inserido',
-    empresaEstagio: 'EDP Brasil — Distribuição & Inovação',
-    bolsaValor: 1250,
-    telefoneContato: '(12) 99112-0943',
-    email: 'felipe.barreto@aluno.educacao.sp.gov.br'
-  },
-  {
-    id: 'est-8',
-    nomeCompleto: 'Larissa Alencar Morais',
-    nomeAnonimizado: 'Estudante L.A.M. (2ª B ADM)',
-    ra: '113.882.341-5 SP',
-    turmaId: '2a-adm',
-    cursoId: 'adm',
-    statusMatricula: 'Ativo',
-    frequenciaGeral: 89.2,
-    situacaoAcademica: 'Estável',
-    mediaGeral: 7.9,
-    estagioStatus: 'Encaminhado',
-    empresaEstagio: 'Magneti Marelli',
-    bolsaValor: 1000,
-    telefoneContato: '(12) 99234-7712',
-    email: 'larissa.morais@aluno.educacao.sp.gov.br'
-  }
+  ...alunosAtivosMonsenhor
 ];
 
 export const initialEmpresas: EmpresaParceira[] = [
@@ -492,38 +360,7 @@ export const initialVisitasTecnicas: VisitaTecnica[] = [
 ];
 
 export const initialBoletins: BoletimEstudante[] = [
-  {
-    estudanteId: 'est-1',
-    nome: 'Gabriel Mendonça de Oliveira',
-    turma: '2ª Série A - Desenv. de Sistemas',
-    curso: 'Desenvolvimento de Sistemas',
-    disciplinas: [
-      { disciplina: 'Programação Web I', b1: 9.0, b2: 9.5, b3: 10.0, b4: 9.5, media: 9.5, tendencia: 'Progressão' },
-      { disciplina: 'Banco de Dados', b1: 8.5, b2: 9.0, b3: 9.5, b4: 9.5, media: 9.1, tendencia: 'Progressão' },
-      { disciplina: 'Análise e Projeto de Sistemas', b1: 8.0, b2: 8.5, b3: 9.0, b4: 9.0, media: 8.6, tendencia: 'Progressão' },
-      { disciplina: 'Técnicas de Programação', b1: 9.5, b2: 9.5, b3: 10.0, b4: 10.0, media: 9.8, tendencia: 'Progressão' }
-    ],
-    pontosFortes: ['Excelente raciocínio algorítmico', 'Liderança em trabalhos em equipe', 'Autonomia na resolução de problemas'],
-    pontosAtencao: ['Aprimorar documentação formal de software'],
-    intervencoesSugeridas: 'Incentivado a submeter artigo para feira de ciências da Diretoria de Ensino.',
-    dataUltimaImportacao: '2025-09-30'
-  },
-  {
-    estudanteId: 'est-5',
-    nome: 'Matheus Rodrigues Nogueira',
-    turma: '2ª Série C - Logística',
-    curso: 'Logística',
-    disciplinas: [
-      { disciplina: 'Cadeia de Suprimentos', b1: 6.0, b2: 5.5, b3: 7.0, b4: 7.5, media: 6.5, tendencia: 'Progressão' },
-      { disciplina: 'Gestão de Transportes', b1: 5.0, b2: 5.0, b3: 6.5, b4: 7.0, media: 5.9, tendencia: 'Progressão' },
-      { disciplina: 'Custos Logísticos', b1: 6.5, b2: 5.0, b3: 6.0, b4: 6.5, media: 6.0, tendencia: 'Estável' },
-      { disciplina: 'Planejamento de Estoques', b1: 5.5, b2: 4.5, b3: 6.5, b4: 7.0, media: 5.9, tendencia: 'Progressão' }
-    ],
-    pontosFortes: ['Interesse prático em operações de pátio', 'Excelente pontualidade após intervenção da Busca Ativa'],
-    pontosAtencao: ['Cálculo de custos e fórmulas matemáticas aplicadas a estoques'],
-    intervencoesSugeridas: 'Inclusão nas oficinas de reforço de matemática financeira da escola.',
-    dataUltimaImportacao: '2025-09-30'
-  }
+  ...boletinsAtivosMonsenhor
 ];
 
 export const initialDocumentosPDF: DocumentoPDF[] = [
