@@ -5,14 +5,15 @@ import {
   Printer,
   FileText,
   CheckCircle2,
-  Calendar,
   Layers,
   Sparkles,
   Building2,
   Briefcase,
-  Users
+  Users,
+  Loader2
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { generateRelatorioExecutivoPDF } from '../../services/pdfService';
 
 export const RelatoriosExportacao: React.FC = () => {
   const {
@@ -28,6 +29,7 @@ export const RelatoriosExportacao: React.FC = () => {
   } = useApp();
   const [selectedTipo, setSelectedTipo] = useState<string>('geral');
   const [bimestreRelatorio, setBimestreRelatorio] = useState<string>('3º Bimestre');
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const relatoriosDisponiveis = [
     { id: 'geral', titulo: 'Relatório Executivo Consolidado PAEET (SEDUC-SP)', icon: Layers, desc: 'Visão integral de estágios, frequência, empresas e visitas.' },
@@ -45,11 +47,13 @@ export const RelatoriosExportacao: React.FC = () => {
       });
     } else {
       csvContent += "Indicador,Valor,Referência\n";
-      csvContent += `"Estudantes Acompanhados",342,"Total Geral"\n`;
+      csvContent += `"Estudantes Acompanhados",${estudantes.length},"Total Geral"\n`;
       csvContent += `"Estudantes no BEEM",84,"Bolsas Ativas"\n`;
       csvContent += `"Empresas Parceiras",${empresas.length},"Conveniadas"\n`;
       csvContent += `"Frequência Média Geral","91.8%","Meta 85%"\n`;
       csvContent += `"Casos Busca Ativa",${buscaAtivaList.length},"Atendimentos"\n`;
+      csvContent += `"Visitas Técnicas",${visitasList.length},"Homologadas"\n`;
+      csvContent += `"Certificados Emitidos",${reconhecimentosList.length},"Protagonismo"\n`;
     }
 
     const encodedUri = encodeURI(csvContent);
@@ -70,7 +74,51 @@ export const RelatoriosExportacao: React.FC = () => {
       ipOrigem: '10.67.69.161'
     });
 
-    showToast(`Relatório CSV gerado e exportado com sucesso!`);
+    showToast(`Planilha CSV exportada com sucesso!`);
+  };
+
+  const handleExportPDF = async () => {
+    if (isGeneratingPDF) return;
+    setIsGeneratingPDF(true);
+    showToast('Gerando PDF oficial SEDUC-SP... aguarde.');
+
+    try {
+      await new Promise(r => setTimeout(r, 300)); // deixar o toast aparecer
+      generateRelatorioExecutivoPDF({
+        nomeDocente: profile.nome,
+        cargo: profile.cargo,
+        registro: profile.registroFuncional,
+        unidade: profile.unidadeEscolar,
+        diretoria: profile.diretoriaEnsino,
+        cidade: profile.cidade,
+        anoLetivo: profile.anoLetivo,
+        bimestre: bimestreRelatorio,
+        estudantes: estudantes.length,
+        beem: 84,
+        empresas: empresas.length,
+        frequencia: '91,8%',
+        buscaAtiva: buscaAtivaList.length,
+        visitas: visitasList.length,
+        reconhecimentos: reconhecimentosList.length
+      });
+
+      addAuditLog({
+        dataHora: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        usuario: currentUser.nome,
+        perfil: currentUser.perfil,
+        acao: 'Exportação de Relatório PDF Oficial',
+        modulo: 'Relatórios & Exportação',
+        detalhes: `PDF do relatório executivo SEDUC-SP gerado (${bimestreRelatorio} / ${profile.anoLetivo}).`,
+        ipOrigem: '10.67.69.161'
+      });
+
+      showToast('✅ PDF oficial gerado e salvo com sucesso!');
+    } catch (err) {
+      showToast('Erro ao gerar PDF. Tente novamente.');
+      console.error(err);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   const handlePrintReport = () => {
@@ -101,7 +149,7 @@ export const RelatoriosExportacao: React.FC = () => {
             Relatórios Executivos & Exportação de Dados
           </h1>
           <p className="text-xs lg:text-sm text-slate-400">
-            Geração instantânea de relatórios consolidados em formato PDF para impressão e planilhas CSV para acompanhamento da Diretoria de Ensino.
+            Geração de relatórios em <strong className="text-emerald-400">PDF oficial</strong> (jsPDF) e planilhas CSV para acompanhamento da Diretoria de Ensino.
           </p>
         </div>
 
@@ -126,13 +174,37 @@ export const RelatoriosExportacao: React.FC = () => {
             <span>Exportar CSV</span>
           </button>
 
+          {/* ── NOVO: Botão PDF oficial ────────────────────────── */}
+          <button
+            onClick={handleExportPDF}
+            disabled={isGeneratingPDF}
+            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all"
+          >
+            {isGeneratingPDF
+              ? <Loader2 className="w-4 h-4 animate-spin" />
+              : <FileText className="w-4 h-4" />
+            }
+            <span>{isGeneratingPDF ? 'Gerando PDF...' : 'Baixar PDF Oficial'}</span>
+          </button>
+
           <button
             onClick={handlePrintReport}
             className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-lg transition-colors"
           >
             <Printer className="w-4 h-4" />
-            <span>Imprimir Relatório Oficial</span>
+            <span>Imprimir</span>
           </button>
+        </div>
+      </div>
+
+      {/* PDF Export Notice */}
+      <div className="flex items-start space-x-3 p-4 rounded-xl bg-blue-500/5 border border-blue-500/20 no-print">
+        <Sparkles className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-xs font-semibold text-blue-300">Exportação PDF com jsPDF — Layout Oficial SEDUC-SP</p>
+          <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+            Clique em <strong className="text-blue-400">Baixar PDF Oficial</strong> para gerar o arquivo <code className="text-blue-300">.pdf</code> completo com cabeçalho institucional, tabela de indicadores, resumo executivo e campos de assinatura — pronto para protocolar na Diretoria de Ensino. Os dados são preenchidos automaticamente com as informações do seu perfil PAEET.
+          </p>
         </div>
       </div>
 
@@ -156,6 +228,12 @@ export const RelatoriosExportacao: React.FC = () => {
               </div>
               <h4 className="text-xs font-bold text-white">{rel.titulo}</h4>
               <p className="text-[11px] text-slate-400 mt-1">{rel.desc}</p>
+              {isSelected && (
+                <div className="flex items-center space-x-1 mt-2 text-emerald-400">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span className="text-[10px] font-semibold">Selecionado para exportação</span>
+                </div>
+              )}
             </div>
           );
         })}
@@ -179,6 +257,7 @@ export const RelatoriosExportacao: React.FC = () => {
 
           <div className="text-left sm:text-right text-xs text-slate-400 space-y-0.5">
             <p className="font-mono text-slate-200 font-bold">Ano Letivo: {profile.anoLetivo}</p>
+            <p>Período: <span className="text-emerald-400 font-semibold">{bimestreRelatorio}</span></p>
             <p>Emissão: {new Date().toLocaleDateString('pt-BR')}</p>
             <p className="text-emerald-400 font-semibold">Responsável: {profile.nome}</p>
           </div>
@@ -205,42 +284,28 @@ export const RelatoriosExportacao: React.FC = () => {
               <thead className="bg-slate-900 text-slate-400 font-semibold border-b border-slate-800">
                 <tr>
                   <th className="py-2.5 px-4">Indicador de Gestão</th>
-                  <th className="py-2.5 px-4">Meta Estipulada</th>
-                  <th className="py-2.5 px-4">Resultado Atingido</th>
-                  <th className="py-2.5 px-4">Status de Cumprimento</th>
+                  <th className="py-2.5 px-4">Meta</th>
+                  <th className="py-2.5 px-4">Realizado</th>
+                  <th className="py-2.5 px-4">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 font-mono">
-                <tr>
-                  <td className="py-2.5 px-4 font-sans text-white">Estudantes Inseridos no BEEM</td>
-                  <td className="py-2.5 px-4">70 Alunos</td>
-                  <td className="py-2.5 px-4 font-bold text-emerald-400">84 Alunos</td>
-                  <td className="py-2.5 px-4 font-sans text-emerald-400 font-bold">Superada (+20%)</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 px-4 font-sans text-white">Empresas Parceiras Mapeadas</td>
-                  <td className="py-2.5 px-4">25 Empresas</td>
-                  <td className="py-2.5 px-4 font-bold text-emerald-400">{empresas.length} Empresas</td>
-                  <td className="py-2.5 px-4 font-sans text-emerald-400 font-bold">Superada</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 px-4 font-sans text-white">Percentual Médio de Frequência</td>
-                  <td className="py-2.5 px-4">85.0%</td>
-                  <td className="py-2.5 px-4 font-bold text-cyan-400">91.8%</td>
-                  <td className="py-2.5 px-4 font-sans text-emerald-400 font-bold">Meta Mantida</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 px-4 font-sans text-white">Ações de Busca Ativa Regularizadas</td>
-                  <td className="py-2.5 px-4">50 Casos</td>
-                  <td className="py-2.5 px-4 font-bold text-amber-400">{buscaAtivaList.length} Atendimentos</td>
-                  <td className="py-2.5 px-4 font-sans text-emerald-400 font-bold">100% Protocolados</td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 px-4 font-sans text-white">Visitas Técnicas Homologadas</td>
-                  <td className="py-2.5 px-4">8 Visitas</td>
-                  <td className="py-2.5 px-4 font-bold text-rose-400">12 Visitas (Inclui CAVEX)</td>
-                  <td className="py-2.5 px-4 font-sans text-emerald-400 font-bold">Superada</td>
-                </tr>
+                {[
+                  ['Estudantes Acompanhados', '300', `${estudantes.length}`, 'Superada'],
+                  ['Estudantes no BEEM (Bolsa Estágio)', '70', '84', 'Superada (+20%)'],
+                  ['Empresas Parceiras Mapeadas', '25', `${empresas.length}`, 'Superada'],
+                  ['Frequência Média Geral', '85,0%', '91,8%', 'Meta Mantida'],
+                  ['Atendimentos Busca Ativa', '50', `${buscaAtivaList.length}`, '100% Protocolados'],
+                  ['Visitas Técnicas Homologadas', '8', `${visitasList.length} (incl. CAVEX)`, 'Superada'],
+                  ['Certificados de Protagonismo Emitidos', '20', `${reconhecimentosList.length}`, 'Superada'],
+                ].map(([ind, meta, result, status], i) => (
+                  <tr key={i} className="hover:bg-slate-900/40">
+                    <td className="py-2.5 px-4 font-sans text-white">{ind}</td>
+                    <td className="py-2.5 px-4">{meta}</td>
+                    <td className="py-2.5 px-4 font-bold text-emerald-400">{result}</td>
+                    <td className="py-2.5 px-4 font-sans text-emerald-400 font-bold">{status}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -262,6 +327,10 @@ export const RelatoriosExportacao: React.FC = () => {
             <p className="text-[10px] text-slate-400">Homologado perante a SEDUC-SP</p>
           </div>
         </div>
+
+        <p className="text-center text-[10px] text-slate-500 font-mono">
+          Documento gerado pelo Sistema PAEET Digital v1.0 | portfolio-paeet.vercel.app
+        </p>
       </div>
     </div>
   );

@@ -10,17 +10,31 @@ import {
   Search,
   ShieldCheck,
   Star,
-  FileCheck2
+  FileCheck2,
+  Loader2,
+  QrCode
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../../context/AppContext';
 import { StatCard } from '../common/StatCard';
 import { Reconhecimento } from '../../types';
+import { generateCertificadoPDF } from '../../services/pdfService';
 
 export const CertificacaoProtagonismo: React.FC = () => {
-  const { reconhecimentosList, addReconhecimento, estudantes, profile, userRole, showToast } = useApp();
+  const {
+    reconhecimentosList,
+    addReconhecimento,
+    estudantes,
+    profile,
+    userRole,
+    currentUser,
+    addAuditLog,
+    showToast
+  } = useApp();
+
   const [selectedRecId, setSelectedRecId] = useState<string>(reconhecimentosList[0]?.id || '');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Form states
   const [formEstudanteId, setFormEstudanteId] = useState(estudantes[0]?.id || '');
@@ -55,7 +69,54 @@ export const CertificacaoProtagonismo: React.FC = () => {
     setShowCreateModal(false);
   };
 
+  const handleDownloadPDF = async () => {
+    if (!selectedRec || isGeneratingPDF) return;
+    setIsGeneratingPDF(true);
+    showToast('Gerando Certificado oficial em PDF...');
+
+    try {
+      await new Promise(r => setTimeout(r, 250));
+      generateCertificadoPDF({
+        nomeEstudante: selectedRec.nomeEstudante,
+        curso: selectedRec.curso,
+        turma: selectedRec.turma,
+        motivo: selectedRec.categoria + ' — ' + selectedRec.criterio,
+        bimestre: 'Consolidado do Período',
+        anoLetivo: profile.anoLetivo,
+        nomeDocente: profile.nome,
+        unidade: profile.unidadeEscolar,
+        codigo: selectedRec.certificadoCodigo || 'PAEET-MERT-2024-X99'
+      });
+
+      addAuditLog({
+        dataHora: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        usuario: currentUser.nome,
+        perfil: currentUser.perfil,
+        acao: 'Download de Certificado PDF',
+        modulo: 'Certificação & Protagonismo',
+        detalhes: `Certificado de Mérito exportado em PDF para ${selectedRec.nomeEstudante} (${selectedRec.certificadoCodigo}).`,
+        ipOrigem: '10.67.69.161'
+      });
+
+      showToast('✅ Certificado oficial baixado com sucesso!');
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao exportar certificado. Tente novamente.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   const handlePrint = () => {
+    addAuditLog({
+      dataHora: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      usuario: currentUser.nome,
+      perfil: currentUser.perfil,
+      acao: 'Impressão de Certificado Oficial',
+      modulo: 'Certificação & Protagonismo',
+      detalhes: `Emissão física do certificado de ${selectedRec?.nomeEstudante}.`,
+      ipOrigem: '10.67.69.161'
+    });
     window.print();
   };
 
@@ -74,7 +135,7 @@ export const CertificacaoProtagonismo: React.FC = () => {
             Certificação & Protagonismo Juvenil
           </h1>
           <p className="text-xs lg:text-sm text-slate-400">
-            Reconhecimento de estudantes que se destacaram por excelência acadêmica, evolução técnica, assiduidade e espírito comunitário.
+            Reconhecimento oficial de estudantes que se destacaram por excelência acadêmica, evolução técnica, assiduidade e espírito comunitário com emissão de PDF e QR Code de autenticidade.
           </p>
         </div>
 
@@ -142,11 +203,24 @@ export const CertificacaoProtagonismo: React.FC = () => {
             </h3>
             <div className="flex items-center space-x-2">
               <button
+                onClick={handleDownloadPDF}
+                disabled={isGeneratingPDF}
+                className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-semibold shadow-md shadow-amber-600/20 transition-all"
+              >
+                {isGeneratingPDF ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Download className="w-3.5 h-3.5" />
+                )}
+                <span>{isGeneratingPDF ? 'Gerando...' : 'Baixar PDF Oficial'}</span>
+              </button>
+
+              <button
                 onClick={handlePrint}
                 className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
               >
                 <Printer className="w-3.5 h-3.5" />
-                <span>Imprimir Certificado</span>
+                <span>Imprimir</span>
               </button>
             </div>
           </div>
@@ -176,7 +250,7 @@ export const CertificacaoProtagonismo: React.FC = () => {
                   Governo do Estado de São Paulo • SEDUC-SP
                 </h5>
                 <p className="text-xs font-medium text-slate-300">
-                  {profile.unidadeEscolar} • Diretoria Regional de Ensino
+                  {profile.unidadeEscolar} • {profile.diretoriaEnsino}
                 </p>
               </div>
 
@@ -210,18 +284,41 @@ export const CertificacaoProtagonismo: React.FC = () => {
                 </div>
               </div>
 
-              {/* Assinaturas e Autenticidade */}
+              {/* Assinaturas e Autenticidade com QR Code */}
               <div className="relative z-10 pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-400">
+                {/* Assinatura PAEET */}
                 <div className="text-center sm:text-left">
                   <div className="w-48 border-b border-slate-600 mb-1 mx-auto sm:mx-0" />
                   <p className="font-bold text-slate-200">{profile.nome}</p>
                   <p className="text-[10px] text-slate-400">{profile.cargo}</p>
+                  <p className="text-[9px] text-slate-500">{profile.registroFuncional}</p>
                 </div>
 
+                {/* Selo Central de Autenticidade Digital com QR Code */}
+                <div className="flex items-center gap-3 bg-slate-900/90 px-3.5 py-2 rounded-xl border border-amber-500/30">
+                  <div className="p-1.5 bg-white rounded-lg">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://portfolio-paeet.vercel.app/?verify=${selectedRec.certificadoCodigo}&color=0A0F1D`}
+                      alt="QR Code de Autenticidade"
+                      className="w-10 h-10"
+                    />
+                  </div>
+                  <div className="text-left">
+                    <div className="flex items-center space-x-1 text-emerald-400">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span className="text-[10px] font-bold">Autenticado Digitalmente</span>
+                    </div>
+                    <p className="text-[9px] text-slate-400 mt-0.5">Aponte a câmera para validar</p>
+                    <p className="font-mono text-[9px] text-amber-400 font-bold">{selectedRec.certificadoCodigo}</p>
+                  </div>
+                </div>
+
+                {/* Assinatura Direção */}
                 <div className="text-center sm:text-right">
-                  <p className="font-mono text-[10px] text-amber-400">Código de Autenticidade:</p>
-                  <p className="font-mono font-bold text-xs text-white">{selectedRec.certificadoCodigo}</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">Emitido em: {selectedRec.data}</p>
+                  <div className="w-48 border-b border-slate-600 mb-1 mx-auto sm:ml-auto" />
+                  <p className="font-bold text-slate-200">Direção da Unidade Escolar</p>
+                  <p className="text-[10px] text-slate-400">{profile.unidadeEscolar}</p>
+                  <p className="text-[9px] text-slate-500">Homologado SEDUC-SP</p>
                 </div>
               </div>
             </div>

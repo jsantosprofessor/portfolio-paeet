@@ -24,6 +24,9 @@ export const Configuracoes: React.FC = () => {
   const [cidade, setCidade] = useState(profile.cidade);
   const [email, setEmail] = useState(profile.email);
   const [registro, setRegistro] = useState(profile.registroFuncional);
+  const [diretorNome, setDiretorNome] = useState(profile.diretorNome || 'Direção da Unidade Escolar');
+  const [formacao, setFormacao] = useState(profile.formacao || '');
+  const [resumoAtuacao, setResumoAtuacao] = useState(profile.resumoAtuacao || '');
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,9 +38,12 @@ export const Configuracoes: React.FC = () => {
       diretoriaEnsino: diretoria,
       cidade,
       email,
-      registroFuncional: registro
+      registroFuncional: registro,
+      diretorNome,
+      formacao,
+      resumoAtuacao
     }));
-    showToast('Dados do perfil do PAEET atualizados com sucesso!');
+    showToast('Dados do perfil e personalização institucional atualizados!');
   };
 
   const handleExportBackup = () => {
@@ -164,6 +170,39 @@ export const Configuracoes: React.FC = () => {
                   className="w-full mt-1 bg-slate-900 text-slate-200 rounded-lg p-2.5 border border-slate-700"
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-slate-400 font-medium">Diretor(a) da Unidade Escolar (para Relatórios e Certificados)</label>
+                <input
+                  type="text"
+                  value={diretorNome}
+                  onChange={(e) => setDiretorNome(e.target.value)}
+                  placeholder="Ex: Profª. Maria Aparecida da Silva"
+                  className="w-full mt-1 bg-slate-900 text-slate-200 rounded-lg p-2.5 border border-slate-700"
+                />
+              </div>
+
+              <div>
+                <label className="text-slate-400 font-medium">Formação Acadêmica & Titulações</label>
+                <input
+                  type="text"
+                  value={formacao}
+                  onChange={(e) => setFormacao(e.target.value)}
+                  className="w-full mt-1 bg-slate-900 text-slate-200 rounded-lg p-2.5 border border-slate-700"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-slate-400 font-medium">Resumo de Atuação Estratégica (Biografia Docente)</label>
+              <textarea
+                rows={3}
+                value={resumoAtuacao}
+                onChange={(e) => setResumoAtuacao(e.target.value)}
+                className="w-full mt-1 bg-slate-900 text-slate-200 rounded-lg p-2.5 border border-slate-700 leading-relaxed"
+              />
             </div>
 
             <div className="flex items-center justify-end pt-3 border-t border-slate-800">

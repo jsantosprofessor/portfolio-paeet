@@ -12,6 +12,8 @@ export interface PAEETProfile {
   registroFuncional: string;
   formacao: string;
   resumoAtuacao: string;
+  diretorNome?: string;
+  brasaoUrl?: string;
 }
 
 export interface CursoTecnico {
