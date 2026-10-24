@@ -20,8 +20,8 @@ import { AnimatedCounter } from '../common/AnimatedCounter';
 export const HeroHome: React.FC = () => {
   const { profile, setActiveModule, empresas, estudantes, reconhecimentosList, visitasList, acoesItinerario } = useApp();
 
-  const totalEstudantes = 342; // total de alunos acompanhados
-  const totalInseridos = 84; // alunos inseridos no BEEM
+  const totalEstudantes = estudantes.length; // alunos ativos da turma 2ª C DS
+  const totalInseridos = 84; // alunos inseridos no BEEM (total rede)
   const totalEmpresas = empresas.length;
   const totalVisitas = visitasList.length;
   const totalAcoes = acoesItinerario.length + 18; // total de ações consolidadas

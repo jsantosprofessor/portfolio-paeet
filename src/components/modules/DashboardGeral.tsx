@@ -36,8 +36,48 @@ import { useApp } from '../../context/AppContext';
 import { StatCard } from '../common/StatCard';
 import { dashboardChartData } from '../../data/mockData';
 
+// Matérias exclusivas do Técnico de DS Novotec
+const TECH_SUBJECT_KEYS = [
+  'LOGICA E LINGUAGENS DE PROGRAMACAO',
+  'PROCESSOS DE DESENVOLVIMENTO DE SOFTWARE E METODOLOGIAS AGEIS',
+  'REDES DE COMPUTADORES E SEGURANÇA DA INFORMAÇAO NA NUVEM',
+  'CARREIRA E COMPETENCIAS PARA O MERCADO DE TRABALHO'
+];
+const isTechSubject = (nome: string) => TECH_SUBJECT_KEYS.some(k => nome.toUpperCase().includes(k));
+
 export const DashboardGeral: React.FC = () => {
-  const { filtros, setFiltros, cursos, turmas, setActiveModule } = useApp();
+  const { filtros, setFiltros, cursos, turmas, setActiveModule, estudantes, boletins } = useApp();
+
+  // ── Estatísticas calculadas dos alunos/boletins reais ──
+  const totalAlunos = estudantes.length;
+  const alunosProgressao = estudantes.filter(e => e.situacaoAcademica === 'Progressão').length;
+  const alunosEstaveis = estudantes.filter(e => e.situacaoAcademica === 'Estável').length;
+  const alunosRegressao = estudantes.filter(e => e.situacaoAcademica === 'Regressão').length;
+  const boletinsSincronizados = boletins.length;
+
+  // Frequência média real dos alunos
+  const freqMedia = totalAlunos > 0
+    ? Number((estudantes.reduce((s, e) => s + (e.frequenciaGeral || 0), 0) / totalAlunos).toFixed(1))
+    : 91.8;
+
+  // Média das matérias técnicas calculada dos boletins reais
+  let techSum = 0, techCount = 0;
+  boletins.forEach(b => {
+    b.disciplinas.forEach(d => {
+      if (isTechSubject(d.disciplina) && d.media > 0) {
+        techSum += d.media;
+        techCount++;
+      }
+    });
+  });
+  const mediaGeralTecnica = techCount > 0 ? Number((techSum / techCount).toFixed(1)) : 7.5;
+
+  // Distribuição situação acadêmica real (para o gráfico de pizza)
+  const distribuicaoSituacaoReal = [
+    { name: 'Progressão', value: alunosProgressao, color: '#10B981' },
+    { name: 'Desempenho Estável', value: alunosEstaveis, color: '#3B82F6' },
+    { name: 'Em Regressão / Apoio', value: alunosRegressao, color: '#F59E0B' }
+  ].filter(d => d.value > 0);
 
   // Custom Tooltip for dark mode charts
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -135,15 +175,63 @@ export const DashboardGeral: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid de 10 Indicadores Estratégicos */}
+      {/* Grid de Indicadores Estratégicos — dados reais dos alunos */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <StatCard
-          title="Estudantes Acompanhados"
-          value={342}
-          icon={Users}
+          title="Média Geral (Matérias Técnicas)"
+          value={mediaGeralTecnica}
+          decimals={1}
+          icon={TrendingUp}
           iconColor="text-blue-400"
           glowColor="from-blue-500/20 to-transparent"
-          trend={{ value: "+14.2%", positive: true, label: "vs ano anterior" }}
+          trend={{ value: `Meta SEDUC: 7.0`, positive: mediaGeralTecnica >= 7, label: 'Matérias do Técnico' }}
+          onClick={() => setActiveModule('desempenho')}
+        />
+        <StatCard
+          title="Alunos em Progressão"
+          value={alunosProgressao}
+          icon={TrendingUp}
+          iconColor="text-emerald-400"
+          glowColor="from-emerald-500/20 to-transparent"
+          trend={{ value: `+${Math.round((alunosProgressao / Math.max(totalAlunos,1)) * 100)}% da turma`, positive: true, label: 'Evolução no 3º Bim' }}
+          onClick={() => setActiveModule('desempenho')}
+        />
+        <StatCard
+          title="Desempenho Estável"
+          value={alunosEstaveis}
+          icon={FileCheck2}
+          iconColor="text-blue-400"
+          glowColor="from-blue-500/20 to-transparent"
+          trend={{ value: `${Math.round((alunosEstaveis / Math.max(totalAlunos,1)) * 100)}% da turma`, positive: true, label: 'Mantendo Desempenho' }}
+          onClick={() => setActiveModule('desempenho')}
+        />
+        <StatCard
+          title="Em Regressão / Apoio"
+          value={alunosRegressao}
+          icon={AlertTriangle}
+          iconColor="text-amber-400"
+          glowColor="from-amber-500/20 to-transparent"
+          trend={{ value: `${alunosRegressao} alunos`, positive: false, label: 'Monitoria Ativa' }}
+          onClick={() => setActiveModule('desempenho')}
+        />
+        <StatCard
+          title="Boletins Sincronizados"
+          value={boletinsSincronizados}
+          icon={Layers}
+          iconColor="text-purple-400"
+          glowColor="from-purple-500/20 to-transparent"
+          trend={{ value: `${totalAlunos} alunos ativos`, positive: true, label: '2ª Série C DS' }}
+          onClick={() => setActiveModule('desempenho')}
+        />
+        <StatCard
+          title="Frequência Geral da Turma"
+          value={freqMedia}
+          suffix="%"
+          decimals={1}
+          icon={UserCheck}
+          iconColor="text-cyan-400"
+          glowColor="from-cyan-500/20 to-transparent"
+          trend={{ value: 'Meta: 85%', positive: freqMedia >= 85, label: freqMedia >= 85 ? 'Superada ✓' : 'Atenção!' }}
           onClick={() => setActiveModule('busca-ativa')}
         />
         <StatCard
@@ -165,28 +253,6 @@ export const DashboardGeral: React.FC = () => {
           onClick={() => setActiveModule('empresas')}
         />
         <StatCard
-          title="Frequência Geral"
-          value={91.8}
-          suffix="%"
-          decimals={1}
-          icon={UserCheck}
-          iconColor="text-cyan-400"
-          glowColor="from-cyan-500/20 to-transparent"
-          trend={{ value: "Meta: 85%", positive: true, label: "Superada" }}
-          onClick={() => setActiveModule('busca-ativa')}
-        />
-        <StatCard
-          title="Progressão Acadêmica"
-          value={88.4}
-          suffix="%"
-          decimals={1}
-          icon={TrendingUp}
-          iconColor="text-emerald-400"
-          glowColor="from-emerald-500/20 to-transparent"
-          trend={{ value: "284 Alunos", positive: true, label: "Em evolução" }}
-          onClick={() => setActiveModule('desempenho')}
-        />
-        <StatCard
           title="Visitas Técnicas"
           value={12}
           icon={Compass}
@@ -194,33 +260,6 @@ export const DashboardGeral: React.FC = () => {
           glowColor="from-rose-500/20 to-transparent"
           trend={{ value: "CAVEX / PqTec", positive: true, label: "100% Executadas" }}
           onClick={() => setActiveModule('visitas')}
-        />
-        <StatCard
-          title="Ações Itinerário (1ºs)"
-          value={284}
-          icon={FileCheck2}
-          iconColor="text-indigo-400"
-          glowColor="from-indigo-500/20 to-transparent"
-          trend={{ value: "8 Turmas", positive: true, label: "Orientadas" }}
-          onClick={() => setActiveModule('itinerario')}
-        />
-        <StatCard
-          title="Busca Ativa Realizada"
-          value={76}
-          icon={CheckCircle2}
-          iconColor="text-amber-400"
-          glowColor="from-amber-500/20 to-transparent"
-          trend={{ value: "84.2%", positive: true, label: "Casos Reintegrados" }}
-          onClick={() => setActiveModule('busca-ativa')}
-        />
-        <StatCard
-          title="Regressão Acadêmica"
-          value={24}
-          icon={AlertTriangle}
-          iconColor="text-amber-400"
-          glowColor="from-amber-500/20 to-transparent"
-          trend={{ value: "-8 alunos", positive: true, label: "Em recuperação" }}
-          onClick={() => setActiveModule('desempenho')}
         />
         <StatCard
           title="Certificados Emitidos"
@@ -324,7 +363,7 @@ export const DashboardGeral: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={dashboardChartData.distribuicaoSituacao}
+                  data={distribuicaoSituacaoReal}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
@@ -332,8 +371,9 @@ export const DashboardGeral: React.FC = () => {
                   innerRadius={50}
                   outerRadius={80}
                   paddingAngle={5}
+                  label={({ name, value }) => `${value}`}
                 >
-                  {dashboardChartData.distribuicaoSituacao.map((entry, index) => (
+                  {distribuicaoSituacaoReal.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -343,7 +383,7 @@ export const DashboardGeral: React.FC = () => {
           </div>
 
           <div className="space-y-1.5 text-xs">
-            {dashboardChartData.distribuicaoSituacao.map((item, idx) => (
+            {distribuicaoSituacaoReal.map((item, idx) => (
               <div key={idx} className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center space-x-2">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
@@ -352,6 +392,10 @@ export const DashboardGeral: React.FC = () => {
                 <span className="font-bold font-mono text-white">{item.value} alunos</span>
               </div>
             ))}
+            <div className="flex items-center justify-between text-slate-400 border-t border-slate-800 pt-1.5">
+              <span className="font-semibold">Total Turma</span>
+              <span className="font-bold font-mono text-white">{totalAlunos} alunos</span>
+            </div>
           </div>
         </div>
 

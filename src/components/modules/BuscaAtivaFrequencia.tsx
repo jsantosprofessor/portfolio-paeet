@@ -37,16 +37,30 @@ export const BuscaAtivaFrequencia: React.FC = () => {
 
   // Form states for new Busca Ativa
   const [formEstudanteNome, setFormEstudanteNome] = useState('');
-  const [formTurma, setFormTurma] = useState('2ª Série A - Desenv. de Sistemas');
+  const [formTurma, setFormTurma] = useState('2ª Série C - Desenv. de Sistemas (Integral 9H)');
   const [formSituacao, setFormSituacao] = useState('');
   const [formEstrategia, setFormEstrategia] = useState('');
-  const [formFreqAntes, setFormFreqAntes] = useState(70);
+  const [formFreqAntes, setFormFreqAntes] = useState(75);
   const [formStatus, setFormStatus] = useState<'Em Aberto' | 'Em Acompanhamento' | 'Superado / Regularizado'>('Em Acompanhamento');
 
   const selectedEstudante = estudantes.find(e => e.id === selectedEstudanteId);
 
-  // Turmas Frequencia Data
+  // ── KPIs calculados dos dados reais dos 27 alunos ──
+  const totalMatriculados = estudantes.length;
+  const alunosFreqRegular = estudantes.filter(e => (e.frequenciaGeral || 0) >= 85).length;
+  const alunosBaixaFreq = estudantes.filter(e => (e.frequenciaGeral || 0) < 85).length;
+
+  const freqMediaGeral = totalMatriculados > 0
+    ? Number((estudantes.reduce((sum, e) => sum + (e.frequenciaGeral || 0), 0) / totalMatriculados).toFixed(1))
+    : 91.8;
+  const faltasMediasGeral = Number((100 - freqMediaGeral).toFixed(1));
+
+  // Casos resolvidos da busca ativa
+  const casosResolvidos = buscaAtivaList.filter(b => b.status === 'Superado / Regularizado').length;
+
+  // Gráfico de frequência por turma — dados reais da 2ª C DS + histórico das outras turmas
   const turmasFreqData = [
+    { turma: '2ª C DS (Real)', presenca: freqMediaGeral, faltas: faltasMediasGeral },
     { turma: '1ª A DS', presenca: 93.4, faltas: 6.6 },
     { turma: '2ª A DS', presenca: 94.1, faltas: 5.9 },
     { turma: '3ª A DS', presenca: 95.8, faltas: 4.2 },
@@ -112,15 +126,65 @@ export const BuscaAtivaFrequencia: React.FC = () => {
         </button>
       </div>
 
-      {/* KPIs da Frequência */}
+      {/* KPIs da Frequência — calculados dos 27 alunos reais */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-        <StatCard title="Matriculados" value={342} icon={Users} iconColor="text-blue-400" />
-        <StatCard title="Freq. Regular (>85%)" value={310} icon={UserCheck} iconColor="text-emerald-400" />
-        <StatCard title="Baixa Frequência" value={24} icon={AlertTriangle} iconColor="text-amber-400" />
-        <StatCard title="Em Acompanhamento" value={buscaAtivaList.length} icon={Clock} iconColor="text-purple-400" />
-        <StatCard title="% Presença Geral" value={91.8} suffix="%" decimals={1} icon={TrendingUp} iconColor="text-cyan-400" />
-        <StatCard title="% Faltas Médias" value={8.2} suffix="%" decimals={1} icon={AlertTriangle} iconColor="text-slate-400" />
-        <StatCard title="Casos Resolvidos" value={64} icon={CheckCircle2} iconColor="text-emerald-400" />
+        <StatCard
+          title="Matriculados"
+          value={totalMatriculados}
+          icon={Users}
+          iconColor="text-blue-400"
+          trend={{ value: '2ª C DS', positive: true, label: 'Alunos Ativos' }}
+        />
+        <StatCard
+          title="Freq. Regular (>85%)"
+          value={alunosFreqRegular}
+          icon={UserCheck}
+          iconColor="text-emerald-400"
+          trend={{ value: `${Math.round((alunosFreqRegular / Math.max(totalMatriculados, 1)) * 100)}%`, positive: true, label: 'da turma' }}
+        />
+        <StatCard
+          title="Baixa Frequência"
+          value={alunosBaixaFreq}
+          icon={AlertTriangle}
+          iconColor="text-amber-400"
+          trend={{ value: alunosBaixaFreq > 0 ? 'Atenção!' : 'Meta OK', positive: alunosBaixaFreq === 0, label: '<85% de presença' }}
+        />
+        <StatCard
+          title="Em Acompanhamento"
+          value={buscaAtivaList.filter(b => b.status === 'Em Acompanhamento' || b.status === 'Em Aberto').length}
+          icon={Clock}
+          iconColor="text-purple-400"
+          trend={{ value: 'Busca Ativa', positive: true, label: 'Intervenções em curso' }}
+        />
+        <StatCard
+          title="% Presença Geral"
+          value={freqMediaGeral}
+          suffix="%"
+          decimals={1}
+          icon={TrendingUp}
+          iconColor="text-cyan-400"
+          trend={{ value: 'Meta: 85%', positive: freqMediaGeral >= 85, label: freqMediaGeral >= 85 ? 'Superada ✓' : 'Atenção!' }}
+        />
+        <StatCard
+          title="% Faltas Médias"
+          value={faltasMediasGeral}
+          suffix="%"
+          decimals={1}
+          icon={AlertTriangle}
+          iconColor="text-slate-400"
+          trend={{ value: faltasMediasGeral <= 15 ? 'Dentro do limite' : 'Crítico!', positive: faltasMediasGeral <= 15, label: 'Ausências médias' }}
+        />
+        <StatCard
+          title="Casos Resolvidos"
+          value={casosResolvidos}
+          icon={CheckCircle2}
+          iconColor="text-emerald-400"
+          trend={{
+            value: `${Math.round((casosResolvidos / Math.max(buscaAtivaList.length, 1)) * 100)}%`,
+            positive: true,
+            label: 'Taxa de resolução'
+          }}
+        />
       </div>
 
       {/* Gráficos: Turmas e Comparativo Antes/Depois */}
@@ -280,6 +344,7 @@ export const BuscaAtivaFrequencia: React.FC = () => {
                     onChange={(e) => setFormTurma(e.target.value)}
                     className="w-full mt-1 bg-slate-900 text-slate-200 rounded-lg p-2 border border-slate-700"
                   >
+                    <option value="2ª Série C - Desenv. de Sistemas (Integral 9H)">2ª Série C - DS (Monsenhor)</option>
                     <option value="1ª Série A - Desenv. de Sistemas">1ª Série A - DS</option>
                     <option value="2ª Série A - Desenv. de Sistemas">2ª Série A - DS</option>
                     <option value="3ª Série A - Desenv. de Sistemas">3ª Série A - DS</option>

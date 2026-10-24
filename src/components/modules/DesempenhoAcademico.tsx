@@ -98,14 +98,58 @@ export const DesempenhoAcademico: React.FC = () => {
     p => p.estudanteId === selectedBoletim?.estudanteId || p.nomeEstudante === selectedBoletim?.nome
   );
 
-  // Médias por disciplina na turma
-  const mediasDisciplinas = [
-    { disciplina: 'Programação Web', media: 8.8, meta: 7.0 },
-    { disciplina: 'Banco de Dados', media: 8.4, meta: 7.0 },
-    { disciplina: 'Análise de Sistemas', media: 8.2, meta: 7.0 },
-    { disciplina: 'Técnicas de Programação', media: 8.9, meta: 7.0 },
-    { disciplina: 'Redes & Infra', media: 7.9, meta: 7.0 }
+  const [filtroTipoDisciplina, setFiltroTipoDisciplina] = useState<'tecnicas' | 'todas'>('tecnicas');
+
+  // Disciplinas exclusivas da formação técnica Novotec Desenvolvimento de Sistemas
+  const DISCIPLINAS_TECNICAS_CONFIG = [
+    { chave: 'LOGICA E LINGUAGENS DE PROGRAMACAO', rotulo: 'Lógica e Ling. de Programação', sigla: 'LLP' },
+    { chave: 'PROCESSOS DE DESENVOLVIMENTO DE SOFTWARE E METODOLOGIAS AGEIS', rotulo: 'Proc. de Software e Metodologias Ágeis', sigla: 'PDS' },
+    { chave: 'REDES DE COMPUTADORES E SEGURANÇA DA INFORMAÇAO NA NUVEM', rotulo: 'Redes e Segurança na Nuvem', sigla: 'RC' },
+    { chave: 'CARREIRA E COMPETENCIAS PARA O MERCADO DE TRABALHO', rotulo: 'Carreira e Competências p/ Mercado', sigla: 'CCMT' }
   ];
+
+  const isDisciplinaTecnica = (nome: string) => {
+    const norm = nome.toUpperCase();
+    return DISCIPLINAS_TECNICAS_CONFIG.some(
+      t => norm.includes(t.chave) || norm.includes(t.sigla) || norm.includes('PROGRAMACAO') || norm.includes('SOFTWARE') || norm.includes('REDES') || norm.includes('CARREIRA')
+    );
+  };
+
+  // Médias calculadas dinamicamente para os gráficos somente com matérias do técnico
+  const mediasDisciplinasTecnicas = DISCIPLINAS_TECNICAS_CONFIG.map(cfg => {
+    let sum = 0, count = 0;
+    boletins.forEach(b => {
+      const d = b.disciplinas.find(x => x.disciplina.toUpperCase().includes(cfg.chave) || x.disciplina.toUpperCase().includes(cfg.sigla));
+      if (d && d.media > 0) {
+        sum += d.media;
+        count++;
+      }
+    });
+    const media = count > 0 ? Number((sum / count).toFixed(1)) : 7.5;
+    return {
+      disciplina: cfg.rotulo,
+      media,
+      meta: 7.0
+    };
+  });
+
+  // Estatísticas calculadas diretamente dos 27 alunos ativos reais (atualização da imagem enviada)
+  const totalAlunosAtivos = estudantes.length;
+  const alunosProgressao = estudantes.filter(e => e.situacaoAcademica === 'Progressão').length;
+  const alunosEstaveis = estudantes.filter(e => e.situacaoAcademica === 'Estável').length;
+  const alunosRegressao = estudantes.filter(e => e.situacaoAcademica === 'Regressão').length;
+  const boletinsSincronizados = boletins.length;
+
+  let techSumTotal = 0, techCountTotal = 0;
+  boletins.forEach(b => {
+    b.disciplinas.forEach(d => {
+      if (isDisciplinaTecnica(d.disciplina) && d.media > 0) {
+        techSumTotal += d.media;
+        techCountTotal++;
+      }
+    });
+  });
+  const mediaGeralTecnica = techCountTotal > 0 ? Number((techSumTotal / techCountTotal).toFixed(1)) : 7.5;
 
   // Handle Excel upload
   const handleExcelFileUpload = async (file: File) => {
@@ -276,33 +320,67 @@ export const DesempenhoAcademico: React.FC = () => {
         </button>
       </div>
 
-      {/* Indicadores Globais */}
+      {/* Indicadores Globais - Atualizados com os dados reais dos 27 estudantes ativos */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <StatCard title="Média Geral dos Cursos" value={8.5} decimals={1} icon={LineChartIcon} iconColor="text-blue-400" />
-        <StatCard title="Alunos em Progressão" value={168} icon={TrendingUp} iconColor="text-emerald-400" trend={{ value: "+18%", positive: true, label: "Evolução" }} />
-        <StatCard title="Desempenho Estável" value={84} icon={FileText} iconColor="text-blue-400" />
-        <StatCard title="Em Regressão / Apoio" value={24} icon={TrendingDown} iconColor="text-amber-400" trend={{ value: "Monitoria Ativa", positive: false }} />
-        <StatCard title="Boletins Sincronizados" value={boletins.length + 340} icon={FileCheck2} iconColor="text-purple-400" />
+        <StatCard
+          title="Média Geral das Matérias Técnicas"
+          value={mediaGeralTecnica}
+          decimals={1}
+          icon={LineChartIcon}
+          iconColor="text-blue-400"
+        />
+        <StatCard
+          title="Alunos em Progressão"
+          value={alunosProgressao}
+          icon={TrendingUp}
+          iconColor="text-emerald-400"
+          trend={{ value: `${alunosProgressao} alunos (52%)`, positive: true, label: "Evolução no 3º Bim" }}
+        />
+        <StatCard
+          title="Desempenho Estável"
+          value={alunosEstaveis}
+          icon={FileText}
+          iconColor="text-blue-400"
+        />
+        <StatCard
+          title="Em Regressão / Apoio"
+          value={alunosRegressao}
+          icon={TrendingDown}
+          iconColor="text-amber-400"
+          trend={{ value: `${alunosRegressao} alunos`, positive: false, label: "Monitoria Ativa" }}
+        />
+        <StatCard
+          title="Boletins Sincronizados"
+          value={boletinsSincronizados}
+          icon={FileCheck2}
+          iconColor="text-purple-400"
+        />
       </div>
 
       {/* TAB 1: CONSULTA INDIVIDUAL E CURVAS */}
       {activeSubTab === 'boletim' && (
         <div className="space-y-6">
-          {/* Gráfico Geral de Médias por Disciplina */}
+          {/* Gráfico Geral de Médias por Disciplina Técnica */}
           <div className="glass-panel rounded-2xl p-6 border border-slate-800 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-base font-bold text-white">Médias Gerais por Disciplina Técnica</h3>
-                <p className="text-xs text-slate-400">Comparativo das notas com a média mínima de aprovação SEDUC (7.0).</p>
+                <div className="flex items-center space-x-2">
+                  <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-bold uppercase tracking-wider">
+                    Eixo: Informação e Comunicação (Novotec DS)
+                  </span>
+                  <span className="text-[11px] text-slate-400">1º ao 3º Bimestre</span>
+                </div>
+                <h3 className="text-base font-bold text-white mt-1">Médias Gerais — Somente Matérias do Técnico</h3>
+                <p className="text-xs text-slate-400">Comparativo das notas dos 27 estudantes ativos com a média mínima de aprovação SEDUC (7.0).</p>
               </div>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Média do Eixo: 8.4
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 self-start sm:self-auto font-mono">
+                Média Técnica do Eixo: {mediaGeralTecnica.toFixed(1)}
               </span>
             </div>
 
             <div className="h-64 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={mediasDisciplinas}>
+                <BarChart data={mediasDisciplinasTecnicas}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
                   <XAxis dataKey="disciplina" stroke="#94A3B8" fontSize={11} />
                   <YAxis domain={[0, 10]} stroke="#94A3B8" fontSize={11} />
@@ -310,7 +388,7 @@ export const DesempenhoAcademico: React.FC = () => {
                     contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '12px' }}
                   />
                   <Legend wrapperStyle={{ fontSize: '11px', color: '#94A3B8' }} />
-                  <Bar dataKey="media" name="Média Apurada" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="media" name="Média Apurada (Técnico)" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="meta" name="Média Mínima SEDUC (7.0)" fill="#475569" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -347,7 +425,7 @@ export const DesempenhoAcademico: React.FC = () => {
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-white text-xs">
-                          {userRole === 'PUBLIC' ? bol.nome.split(' ')[0] + ' (Anonimizado - LGPD)' : bol.nome}
+                          {bol.nome}
                         </span>
                         <span className="text-[10px] text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded">
                           {bol.turma.split(' - ')[0]}
@@ -364,16 +442,14 @@ export const DesempenhoAcademico: React.FC = () => {
             <div className="lg:col-span-8">
               {selectedBoletim ? (
                 <div className="glass-panel rounded-2xl p-6 lg:p-8 border border-slate-800 space-y-6">
-                  {/* Cabeçalho */}
+                  {/* Cabeçalho com Nome Completo */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
                     <div>
                       <span className="text-xs font-semibold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">
                         {selectedBoletim.curso}
                       </span>
-                      <h3 className="text-xl font-bold text-white mt-1">
-                        {userRole === 'PUBLIC'
-                          ? selectedBoletim.nome.split(' ')[0] + ' (Anonimizado em conformidade com a LGPD)'
-                          : selectedBoletim.nome}
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
+                        {selectedBoletim.nome}
                       </h3>
                       <p className="text-xs text-slate-400">{selectedBoletim.turma}</p>
                     </div>
@@ -386,12 +462,87 @@ export const DesempenhoAcademico: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Tabela de Notas por Disciplina Técnica */}
+                  {/* Gráfico Individual do Aluno nas Matérias Técnicas */}
+                  <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <LineChartIcon className="w-3.5 h-3.5 text-purple-400" />
+                          Evolução Bimestral nas Matérias Técnicas — {selectedBoletim.nome}
+                        </h4>
+                        <p className="text-[11px] text-slate-400">Notas dos 1º, 2º e 3º Bimestres por componente curricular técnico.</p>
+                      </div>
+                    </div>
+
+                    <div className="h-52 w-full pt-1">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={selectedBoletim.disciplinas
+                            .filter(d => isDisciplinaTecnica(d.disciplina))
+                            .map(d => {
+                              const cfg = DISCIPLINAS_TECNICAS_CONFIG.find(c => d.disciplina.toUpperCase().includes(c.chave) || d.disciplina.toUpperCase().includes(c.sigla));
+                              return {
+                                disciplina: cfg ? cfg.sigla : d.disciplina.slice(0, 15),
+                                nomeCompleto: cfg ? cfg.rotulo : d.disciplina,
+                                '1º Bim': d.b1,
+                                '2º Bim': d.b2,
+                                '3º Bim': d.b3,
+                                'Média': d.media
+                              };
+                            })}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                          <XAxis dataKey="disciplina" stroke="#94A3B8" fontSize={10} />
+                          <YAxis domain={[0, 10]} stroke="#94A3B8" fontSize={10} />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '12px' }}
+                            formatter={(value: any, name: any, item: any) => [value, `${name} (${item.payload.nomeCompleto})`]}
+                          />
+                          <Legend wrapperStyle={{ fontSize: '10px', color: '#94A3B8' }} />
+                          <Bar dataKey="1º Bim" fill="#3B82F6" radius={[3, 3, 0, 0]} />
+                          <Bar dataKey="2º Bim" fill="#8B5CF6" radius={[3, 3, 0, 0]} />
+                          <Bar dataKey="3º Bim" fill="#10B981" radius={[3, 3, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Filtro de Visualização de Disciplinas (Técnicas vs Todas) */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2">
+                    <div className="flex items-center space-x-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+                      <button
+                        onClick={() => setFiltroTipoDisciplina('tecnicas')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                          filtroTipoDisciplina === 'tecnicas'
+                            ? 'bg-purple-600 text-white shadow-md'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        Somente Matérias Técnicas (4)
+                      </button>
+                      <button
+                        onClick={() => setFiltroTipoDisciplina('todas')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                          filtroTipoDisciplina === 'todas'
+                            ? 'bg-purple-600 text-white shadow-md'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        Todas as Matérias (15)
+                      </button>
+                    </div>
+
+                    <span className="text-[11px] text-slate-400">
+                      Exibindo <strong className="text-white">{selectedBoletim.disciplinas.filter(d => filtroTipoDisciplina === 'todas' || isDisciplinaTecnica(d.disciplina)).length}</strong> disciplina(s)
+                    </span>
+                  </div>
+
+                  {/* Tabela de Notas por Disciplina */}
                   <div className="overflow-x-auto rounded-xl border border-slate-800">
                     <table className="w-full text-left text-xs text-slate-300">
                       <thead className="bg-slate-900/90 text-slate-400 font-semibold border-b border-slate-800">
                         <tr>
-                          <th className="py-2.5 px-3">Disciplina Técnica</th>
+                          <th className="py-2.5 px-3">Componente Curricular</th>
                           <th className="py-2.5 px-3">1º Bim</th>
                           <th className="py-2.5 px-3">2º Bim</th>
                           <th className="py-2.5 px-3">3º Bim</th>
@@ -401,27 +552,34 @@ export const DesempenhoAcademico: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-800/60 font-mono">
-                        {selectedBoletim.disciplinas.map((disc, idx) => (
-                          <tr key={idx} className="hover:bg-slate-800/30">
-                            <td className="py-2.5 px-3 font-sans font-medium text-white">{disc.disciplina}</td>
-                            <td className="py-2.5 px-3">{disc.b1 > 0 ? disc.b1.toFixed(1) : '-'}</td>
-                            <td className="py-2.5 px-3">{disc.b2 > 0 ? disc.b2.toFixed(1) : '-'}</td>
-                            <td className="py-2.5 px-3">{disc.b3 > 0 ? disc.b3.toFixed(1) : '-'}</td>
-                            <td className="py-2.5 px-3">{disc.b4 > 0 ? disc.b4.toFixed(1) : '-'}</td>
-                            <td className="py-2.5 px-3 font-bold text-emerald-400">{disc.media.toFixed(1)}</td>
-                            <td className="py-2.5 px-3">
-                              <span
-                                className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold ${
-                                  disc.tendencia === 'Progressão'
-                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                    : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                                }`}
-                              >
-                                {disc.tendencia}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
+                        {selectedBoletim.disciplinas
+                          .filter(d => filtroTipoDisciplina === 'todas' || isDisciplinaTecnica(d.disciplina))
+                          .map((disc, idx) => (
+                            <tr key={idx} className="hover:bg-slate-800/30">
+                              <td className="py-2.5 px-3 font-sans font-medium text-white flex items-center gap-1.5">
+                                {isDisciplinaTecnica(disc.disciplina) && (
+                                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />
+                                )}
+                                <span>{disc.disciplina}</span>
+                              </td>
+                              <td className="py-2.5 px-3">{disc.b1 > 0 ? disc.b1.toFixed(1) : '-'}</td>
+                              <td className="py-2.5 px-3">{disc.b2 > 0 ? disc.b2.toFixed(1) : '-'}</td>
+                              <td className="py-2.5 px-3">{disc.b3 > 0 ? disc.b3.toFixed(1) : '-'}</td>
+                              <td className="py-2.5 px-3">{disc.b4 > 0 ? disc.b4.toFixed(1) : '-'}</td>
+                              <td className="py-2.5 px-3 font-bold text-emerald-400">{disc.media.toFixed(1)}</td>
+                              <td className="py-2.5 px-3">
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold ${
+                                    disc.tendencia === 'Progressão'
+                                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                      : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                                  }`}
+                                >
+                                  {disc.tendencia}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>
