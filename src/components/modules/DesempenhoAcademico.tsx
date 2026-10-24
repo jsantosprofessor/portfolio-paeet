@@ -404,10 +404,10 @@ export const DesempenhoAcademico: React.FC = () => {
                         {selectedBoletim.disciplinas.map((disc, idx) => (
                           <tr key={idx} className="hover:bg-slate-800/30">
                             <td className="py-2.5 px-3 font-sans font-medium text-white">{disc.disciplina}</td>
-                            <td className="py-2.5 px-3">{disc.b1.toFixed(1)}</td>
-                            <td className="py-2.5 px-3">{disc.b2.toFixed(1)}</td>
-                            <td className="py-2.5 px-3">{disc.b3.toFixed(1)}</td>
-                            <td className="py-2.5 px-3">{disc.b4.toFixed(1)}</td>
+                            <td className="py-2.5 px-3">{disc.b1 > 0 ? disc.b1.toFixed(1) : '-'}</td>
+                            <td className="py-2.5 px-3">{disc.b2 > 0 ? disc.b2.toFixed(1) : '-'}</td>
+                            <td className="py-2.5 px-3">{disc.b3 > 0 ? disc.b3.toFixed(1) : '-'}</td>
+                            <td className="py-2.5 px-3">{disc.b4 > 0 ? disc.b4.toFixed(1) : '-'}</td>
                             <td className="py-2.5 px-3 font-bold text-emerald-400">{disc.media.toFixed(1)}</td>
                             <td className="py-2.5 px-3">
                               <span
@@ -666,10 +666,10 @@ export const DesempenhoAcademico: React.FC = () => {
                           <td className="py-2 px-3 font-sans font-semibold text-white">{row.nome}</td>
                           <td className="py-2 px-3 text-slate-300">{row.turma}</td>
                           <td className="py-2 px-3 font-sans">{row.disciplina}</td>
-                          <td className="py-2 px-3">{row.b1.toFixed(1)}</td>
-                          <td className="py-2 px-3">{row.b2.toFixed(1)}</td>
-                          <td className="py-2 px-3">{row.b3.toFixed(1)}</td>
-                          <td className="py-2 px-3">{row.b4.toFixed(1)}</td>
+                          <td className="py-2 px-3">{row.b1 !== null && row.b1 !== undefined ? row.b1.toFixed(1) : '-'}</td>
+                          <td className="py-2 px-3">{row.b2 !== null && row.b2 !== undefined ? row.b2.toFixed(1) : '-'}</td>
+                          <td className="py-2 px-3">{row.b3 !== null && row.b3 !== undefined ? row.b3.toFixed(1) : '-'}</td>
+                          <td className="py-2 px-3">{row.b4 !== null && row.b4 !== undefined ? row.b4.toFixed(1) : '-'}</td>
                           <td className="py-2 px-3 text-emerald-400">{row.frequencia}%</td>
                           <td className="py-2 px-3">
                             {row.warnings.length > 0 ? (
