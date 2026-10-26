@@ -79,6 +79,8 @@ interface AppContextType {
   addEmpresa: (empresa: Omit<EmpresaParceira, 'id' | 'historicoTratativas' | 'estagiariosAtivos'>) => void;
   addTratativa: (empresaId: string, tratativa: Omit<TratativaHistorico, 'id'>) => void;
   addBuscaAtiva: (registro: Omit<RegistroBuscaAtiva, 'id'>) => void;
+  updateBuscaAtiva: (id: string, registro: Partial<RegistroBuscaAtiva>) => void;
+  deleteBuscaAtiva: (id: string) => void;
   addEvidencia: (ev: Omit<Evidencia, 'id'>) => void;
   addReconhecimento: (rec: Omit<Reconhecimento, 'id' | 'certificadoCodigo'>) => void;
   importExcelBatch: (result: ExcelParseResult) => void;
@@ -139,7 +141,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [buscaAtivaList, setBuscaAtivaList] = useState<RegistroBuscaAtiva[]>(() => {
-    const saved = localStorage.getItem('paeet_busca_ativa');
+    const saved = localStorage.getItem('paeet_busca_ativa_v3');
     return saved ? JSON.parse(saved) : initialBuscaAtiva;
   });
 
@@ -192,7 +194,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_empresas', JSON.stringify(empresas));
   }, [empresas]);
   useEffect(() => {
-    localStorage.setItem('paeet_busca_ativa', JSON.stringify(buscaAtivaList));
+    localStorage.setItem('paeet_busca_ativa_v3', JSON.stringify(buscaAtivaList));
   }, [buscaAtivaList]);
   useEffect(() => {
     localStorage.setItem('paeet_evidencias', JSON.stringify(evidenciasList));
@@ -283,6 +285,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setBuscaAtivaList(prev => [novo, ...prev]);
     showToast('Ação de Busca Ativa registrada com sucesso.');
+  };
+
+  const updateBuscaAtiva = (id: string, registro: Partial<RegistroBuscaAtiva>) => {
+    setBuscaAtivaList(prev => prev.map(item => item.id === id ? { ...item, ...registro } : item));
+    showToast('Ação de Busca Ativa atualizada com sucesso.');
+  };
+
+  const deleteBuscaAtiva = (id: string) => {
+    setBuscaAtivaList(prev => prev.filter(item => item.id !== id));
+    showToast('Ação de Busca Ativa removida com sucesso.');
   };
 
   const addEvidencia = (ev: Omit<Evidencia, 'id'>) => {
@@ -459,6 +471,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addEmpresa,
         addTratativa,
         addBuscaAtiva,
+        updateBuscaAtiva,
+        deleteBuscaAtiva,
         addEvidencia,
         addReconhecimento,
         importExcelBatch,
