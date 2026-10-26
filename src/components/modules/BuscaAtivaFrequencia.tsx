@@ -28,6 +28,8 @@ import {
 import { useApp } from '../../context/AppContext';
 import { StatCard } from '../common/StatCard';
 import { RegistroBuscaAtiva } from '../../types';
+import { GaleriaAlunoPresente } from './GaleriaAlunoPresente';
+import { metadadosTurmaSED, alunosFrequenciaOficial } from '../../data/alunoPresenteData';
 
 export const BuscaAtivaFrequencia: React.FC = () => {
   const { buscaAtivaList, addBuscaAtiva, estudantes, userRole, showToast } = useApp();
@@ -45,27 +47,26 @@ export const BuscaAtivaFrequencia: React.FC = () => {
 
   const selectedEstudante = estudantes.find(e => e.id === selectedEstudanteId);
 
-  // ── KPIs calculados dos dados reais dos 27 alunos ──
-  const totalMatriculados = estudantes.length;
-  const alunosFreqRegular = estudantes.filter(e => (e.frequenciaGeral || 0) >= 85).length;
-  const alunosBaixaFreq = estudantes.filter(e => (e.frequenciaGeral || 0) < 85).length;
+  // ── KPIs calculados dos dados reais oficiais do Aluno Presente (SEDUC-SP) ──
+  const totalMatriculados = metadadosTurmaSED.matriculasAtivas; // 27 alunos
+  const alunosFreqRegular = alunosFrequenciaOficial.filter(a => a.presencaAnual >= 85).length; // 21 (78%)
+  const alunosBaixaFreq = alunosFrequenciaOficial.filter(a => a.presencaAnual < 85).length; // 6 (22% em acompanhamento)
 
-  const freqMediaGeral = totalMatriculados > 0
-    ? Number((estudantes.reduce((sum, e) => sum + (e.frequenciaGeral || 0), 0) / totalMatriculados).toFixed(1))
-    : 91.8;
-  const faltasMediasGeral = Number((100 - freqMediaGeral).toFixed(1));
+  const freqMediaGeral = metadadosTurmaSED.presencaTurma; // 91.4% oficial
+  const faltasMediasGeral = Number((100 - metadadosTurmaSED.presencaTurma).toFixed(1)); // 8.6%
 
   // Casos resolvidos da busca ativa
   const casosResolvidos = buscaAtivaList.filter(b => b.status === 'Superado / Regularizado').length;
 
-  // Gráfico de frequência por turma — dados reais da 2ª C DS + histórico das outras turmas
+  // Gráfico de frequência por turma — dados reais oficiais da 2ª C DS + histórico das outras turmas
   const turmasFreqData = [
-    { turma: '2ª C DS (Real)', presenca: freqMediaGeral, faltas: faltasMediasGeral },
-    { turma: '1ª A DS', presenca: 93.4, faltas: 6.6 },
-    { turma: '2ª A DS', presenca: 94.1, faltas: 5.9 },
-    { turma: '3ª A DS', presenca: 95.8, faltas: 4.2 },
-    { turma: '2ª B ADM', presenca: 89.5, faltas: 10.5 },
-    { turma: '2ª C LOG', presenca: 86.2, faltas: 13.8 }
+    { turma: '2ª C DS (Oficial SED)', presenca: freqMediaGeral, faltas: faltasMediasGeral },
+    { turma: '1ª A DS', presenca: 93.1, faltas: 6.9 },
+    { turma: '2ª E Regular', presenca: 93.1, faltas: 6.9 },
+    { turma: '2ª A ADM', presenca: 92.8, faltas: 7.2 },
+    { turma: '2ª D Regular', presenca: 90.2, faltas: 9.8 },
+    { turma: '1ª D Regular', presenca: 90.0, faltas: 10.0 },
+    { turma: '2ª B ADM', presenca: 86.6, faltas: 13.4 }
   ];
 
   // Comparativo Antes x Depois Intervenção Busca Ativa
@@ -186,6 +187,9 @@ export const BuscaAtivaFrequencia: React.FC = () => {
           }}
         />
       </div>
+
+      {/* Galeria de Evidências Oficiais SEDUC-SP / FDE - Aluno Presente */}
+      <GaleriaAlunoPresente />
 
       {/* Gráficos: Turmas e Comparativo Antes/Depois */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -52,6 +52,10 @@ export interface Estudante {
   bolsaValor?: number;
   telefoneContato?: string;
   email?: string;
+  raDigito?: string;
+  presencaAnual?: number;
+  presencaSemanaAtual?: number;
+  presencaSemanaAnterior?: number;
 }
 
 export interface EmpresaParceira {
