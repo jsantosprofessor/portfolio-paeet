@@ -126,7 +126,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [turmas] = useState<Turma[]>(initialTurmas);
 
   const [estudantes, setEstudantes] = useState<Estudante[]>(() => {
-    const saved = localStorage.getItem('paeet_estudantes_v2');
+    const saved = localStorage.getItem('paeet_estudantes_v3');
     return saved ? JSON.parse(saved) : initialEstudantes;
   });
 
@@ -151,7 +151,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [evidenciasList, setEvidenciasList] = useState<Evidencia[]>(() => {
-    const saved = localStorage.getItem('paeet_evidencias_v2');
+    const saved = localStorage.getItem('paeet_evidencias_v3');
     return saved ? JSON.parse(saved) : initialEvidencias;
   });
 
@@ -188,7 +188,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_profile_v2', JSON.stringify(profile));
   }, [profile]);
   useEffect(() => {
-    localStorage.setItem('paeet_estudantes_v2', JSON.stringify(estudantes));
+    localStorage.setItem('paeet_estudantes_v3', JSON.stringify(estudantes));
   }, [estudantes]);
   useEffect(() => {
     localStorage.setItem('paeet_empresas', JSON.stringify(empresas));
@@ -200,7 +200,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_visitas_v2', JSON.stringify(visitasList));
   }, [visitasList]);
   useEffect(() => {
-    localStorage.setItem('paeet_evidencias_v2', JSON.stringify(evidenciasList));
+    localStorage.setItem('paeet_evidencias_v3', JSON.stringify(evidenciasList));
   }, [evidenciasList]);
   useEffect(() => {
     localStorage.setItem('paeet_reconhecimentos', JSON.stringify(reconhecimentosList));

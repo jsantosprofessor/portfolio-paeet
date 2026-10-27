@@ -47,7 +47,7 @@ export interface Estudante {
   frequenciaGeral: number; // Porcentagem (0 - 100)
   situacaoAcademica: 'Progressão' | 'Estável' | 'Regressão';
   mediaGeral: number; // 0 - 10
-  estagioStatus: 'Não Iniciado' | 'Inscrito BEEM' | 'Encaminhado' | 'Inserido' | 'Aguardando';
+  estagioStatus: 'Não Iniciado' | 'Inscrito BEEM' | 'Encaminhado' | 'Inserido' | 'Aguardando' | 'Elegível (Aguardando Vaga)' | 'Não Elegível (<85%)';
   empresaEstagio?: string;
   bolsaValor?: number;
   telefoneContato?: string;

@@ -121,6 +121,30 @@ export const EmpresasParceiras: React.FC = () => {
         </button>
       </div>
 
+      {/* Alerta de Foco Estratégico: Prospecção de Empresas de TI */}
+      <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400 shrink-0">
+            <Building2 className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="font-bold text-white block">
+              Foco Atual do PAEET: Prospecção Direta de Empresas do Polo de Tecnologia (TI & Software)
+            </span>
+            <p className="text-slate-300 text-[11px] mt-0.5">
+              Diante da escassez de vagas de TI nos agentes integradores convencionais de Taubaté e do horário integral da PEI (9h), o Prof. Jefferson está contatando diretamente novas empresas de tecnologia para viabilizar formatos flexíveis e compatíveis com a rotina escolar.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="shrink-0 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-colors flex items-center gap-1.5"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          <span>Registrar Empresa Contatada</span>
+        </button>
+      </div>
+
       {/* Main CRM Grid: Left List / Right Details */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Companies Directory */}

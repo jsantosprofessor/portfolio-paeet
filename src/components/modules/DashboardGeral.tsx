@@ -235,12 +235,12 @@ export const DashboardGeral: React.FC = () => {
           onClick={() => setActiveModule('busca-ativa')}
         />
         <StatCard
-          title="Inseridos no BEEM"
-          value={84}
+          title="Elegíveis ao BEEM (≥ 85%)"
+          value={estudantes.filter(e => e.frequenciaGeral >= 85).length}
           icon={Briefcase}
           iconColor="text-emerald-400"
           glowColor="from-emerald-500/20 to-transparent"
-          trend={{ value: "+20%", positive: true, label: "Acima da Meta SEDUC" }}
+          trend={{ value: `${estudantes.filter(e => e.frequenciaGeral >= 85).length} de ${totalAlunos}`, positive: true, label: "Freq. ≥ 85% • PEI 9h" }}
           onClick={() => setActiveModule('beem')}
         />
         <StatCard
@@ -286,8 +286,8 @@ export const DashboardGeral: React.FC = () => {
                 Inscritos, encaminhados a entrevistas e inseridos com bolsa ativa.
               </p>
             </div>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              Taxa Inserção: 80.8%
+            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              Gargalo PEI 9h: 0 Inseridos
             </span>
           </div>
 
@@ -462,7 +462,7 @@ export const DashboardGeral: React.FC = () => {
           Resultados que Transformam a Educação Técnica
         </h2>
         <p className="text-sm text-slate-300 leading-relaxed max-w-4xl">
-          Através da articulação sistemática entre a escola estadual e grandes empregadores de tecnologia e indústria (como Embraer, Stefanini, TOTVS, Kenvue e Gerdau), superamos em <strong>20%</strong> a meta de inserção do BEEM, estabilizamos a frequência escolar acima de <strong>91%</strong> e promovemos visitas técnicas pedagógicas inéditas, como ao <strong>CAVEX</strong> (Comando de Aviação do Exército).
+          Através da articulação sistemática do PAEET na <strong>2ª Série C DS</strong> da E.E. Monsenhor João Alves, qualificamos <strong>{estudantes.filter(e => e.frequenciaGeral >= 85).length} dos 27 estudantes ({((estudantes.filter(e => e.frequenciaGeral >= 85).length / 27) * 100).toFixed(0)}%)</strong> como plenamente elegíveis ao programa BEEM (frequência &ge; 85%), diagnosticamos e documentamos o gargalo da jornada integral PEI de 9 horas, realizamos prospecção ativa de novas empresas de TI e promovemos visitas técnicas pedagógicas inéditas, como ao <strong>CAVEX</strong> (Comando de Aviação do Exército).
         </p>
 
         <div className="flex flex-wrap items-center gap-3 pt-2">

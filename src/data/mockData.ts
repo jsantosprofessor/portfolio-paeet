@@ -80,9 +80,12 @@ export const initialTurmas: Turma[] = [
   { id: '2a-log', nome: '2ª Série C - Logística', cursoId: 'log', serie: '2ª Série', periodo: 'Manhã', anoLetivo: 2026, totalAlunos: 35 }
 ];
 
-export const initialEstudantes: Estudante[] = [
-  ...alunosAtivosMonsenhor
-];
+export const initialEstudantes: Estudante[] = alunosAtivosMonsenhor.map(aluno => ({
+  ...aluno,
+  estagioStatus: aluno.frequenciaGeral >= 85 ? 'Elegível (Aguardando Vaga)' : 'Não Elegível (<85%)',
+  empresaEstagio: undefined,
+  bolsaValor: undefined
+}));
 
 export const initialEmpresas: EmpresaParceira[] = [
   {
@@ -435,26 +438,67 @@ export const initialImportBatches: ImportBatch[] = [
 
 export const initialEvidencias: Evidencia[] = [
   {
-    id: 'ev-1',
-    titulo: 'Tratativa WhatsApp RH Embraer — Homologação de Vagas BEEM',
-    descricao: 'Captura de tela comprobatória do diálogo com a supervisão de RH da Embraer definindo datas para o envio de currículos de alunos do Novotec.',
+    id: 'ev-beem-ciee-painel',
+    titulo: 'Painel Institucional CIEE / BEEM — Gestão Escolar (Prof. Jefferson Santos)',
+    descricao: 'Acesso autenticado do Prof. Jefferson (PAEET/14023-NEWTON CAMARA LEAL BARROS / EE MONSENHOR) à Vitrine de Vagas do BEEM. Diagnóstico: apenas 1 código de vaga cadastrado no município de Taubaté (Infinito Distribuidora de Auto Peças), comprovando a carência crítica de empresas do setor de tecnologia conveniadas.',
     categoria: 'Estágios BEEM',
-    tipo: 'WhatsApp',
-    data: '2025-03-12',
-    url: 'https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=800&q=80',
-    empresaRelacionada: 'Embraer S.A.',
+    tipo: 'Imagem',
+    data: '2026-10-27',
+    url: '/evidencias_estagio/ciee_beem_painel_gestao_escolar.png',
+    turmaRelacionada: '2ª Série C DS',
+    empresaRelacionada: 'CIEE / SEDUC-SP',
     responsavel: 'Prof. Jefferson Santos (PAEET)',
     publicoAutorizado: true
   },
   {
-    id: 'ev-2',
-    titulo: 'E-mail de Confirmação do Convênio de Estágio — Stefanini',
-    descricao: 'Comprovante do envio de documentos e aprovação das 8 primeiras bolsas de estágio do programa BEEM.',
+    id: 'ev-beem-ciee-horarios',
+    titulo: 'Portal Estudante BEEM CIEE — Incompatibilidade de Horário com a Jornada PEI 9h',
+    descricao: 'Comprovação das jornadas das vagas de estágio disponíveis em Taubaté (Faculdade Pitágoras: 07h às 11h ou 17h às 21h; Group CF Saúde: 14h às 18h). A escola funciona no modelo PEI de 9 horas (07h30 às 16h30), inviabilizando que os estudantes assumam estágios em horário comercial.',
+    categoria: 'Estágios BEEM',
+    tipo: 'Imagem',
+    data: '2026-10-27',
+    url: '/evidencias_estagio/beem_ciee_vagas_conflito_horario.png',
+    turmaRelacionada: '2ª Série C DS',
+    empresaRelacionada: 'CIEE / BEEM',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-beem-nube',
+    titulo: 'Portal NUBE — Mapeamento e Escassez de Vagas no Eixo de Tecnologia',
+    descricao: 'Filtragem e monitoramento ativo de vagas de estágio e aprendizagem na plataforma Nube. Constatação de carência de vagas voltadas a Desenvolvimento de Sistemas e predominância de oportunidades em varejo e serviços (Outback, Blue Fit, Kidstok, Forvia).',
+    categoria: 'Estágios BEEM',
+    tipo: 'Imagem',
+    data: '2026-10-27',
+    url: '/evidencias_estagio/nube_pesquisa_vagas_estagio.png',
+    turmaRelacionada: '2ª Série C DS',
+    empresaRelacionada: 'Nube',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-beem-aci',
+    titulo: 'Edital ACI Taubaté — Requisitos Excludentes para Alunos de Escola Integral',
+    descricao: 'Mapeamento de vagas da Associação Comercial e Industrial de Taubaté (Semijoias e Clínica Veterinária). Os requisitos estipulam expressamente: "Estar matriculado no período matutino" ou "no período noturno", gerando um bloqueio normativo para estudantes do PEI de 9 horas.',
+    categoria: 'Estágios BEEM',
+    tipo: 'Imagem',
+    data: '2026-10-27',
+    url: '/evidencias_estagio/aci_taubate_vagas_incompatibilidade_pei.png',
+    turmaRelacionada: '2ª Série C DS',
+    empresaRelacionada: 'ACI Taubaté',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-beem-whatsapp-prospeccao',
+    titulo: 'Tratativa WhatsApp CentralEstagio.com — Prospecção Ativa de Novas Parcerias',
+    descricao: 'Registro do diálogo direto do Prof. Jefferson Santos com a agência de recrutamento CentralEstagio.com. A agência ofertou vaga de Auxiliar de Comércio das 12h35 às 18h. Evidência comprobatória da busca contínua do professor por empresas de TI com formatos flexíveis e compatíveis com a permanência escolar.',
     categoria: 'Empresas Parceiras',
-    tipo: 'E-mail',
-    data: '2025-03-24',
-    url: 'https://images.unsplash.com/photo-1557200134-90327ee9fafa?auto=format&fit=crop&w=800&q=80',
-    empresaRelacionada: 'Stefanini IT Solutions',
+    tipo: 'WhatsApp',
+    data: '2026-10-27',
+    url: '/evidencias_estagio/whatsapp_prospeccao_centralestagio.png',
+    turmaRelacionada: '2ª Série C DS',
+    empresaRelacionada: 'CentralEstagio.com',
     responsavel: 'Prof. Jefferson Santos (PAEET)',
     publicoAutorizado: true
   },
@@ -609,17 +653,17 @@ export const initialReconhecimentos: Reconhecimento[] = [
   }
 ];
 
-// Dados consolidados para os 7 gráficos do Dashboard Geral
+// Dados consolidados para os 7 gráficos do Dashboard Geral (2ª Série C DS - 27 estudantes)
 export const dashboardChartData = {
   estagiosPorMes: [
-    { mes: 'Fev', inscritos: 18, encaminhados: 12, inseridos: 6 },
-    { mes: 'Mar', inscritos: 35, encaminhados: 26, inseridos: 18 },
-    { mes: 'Abr', inscritos: 48, encaminhados: 40, inseridos: 32 },
-    { mes: 'Mai', inscritos: 62, encaminhados: 54, inseridos: 46 },
-    { mes: 'Jun', inscritos: 75, encaminhados: 66, inseridos: 58 },
-    { mes: 'Ago', inscritos: 88, encaminhados: 78, inseridos: 70 },
-    { mes: 'Set', inscritos: 98, encaminhados: 89, inseridos: 81 },
-    { mes: 'Out', inscritos: 104, encaminhados: 94, inseridos: 84 }
+    { mes: 'Fev', inscritos: 27, encaminhados: 16, elegiveis: 16, inseridos: 0 },
+    { mes: 'Mar', inscritos: 27, encaminhados: 17, elegiveis: 17, inseridos: 0 },
+    { mes: 'Abr', inscritos: 27, encaminhados: 18, elegiveis: 18, inseridos: 0 },
+    { mes: 'Mai', inscritos: 27, encaminhados: 19, elegiveis: 19, inseridos: 0 },
+    { mes: 'Jun', inscritos: 27, encaminhados: 20, elegiveis: 20, inseridos: 0 },
+    { mes: 'Ago', inscritos: 27, encaminhados: 20, elegiveis: 20, inseridos: 0 },
+    { mes: 'Set', inscritos: 27, encaminhados: 21, elegiveis: 21, inseridos: 0 },
+    { mes: 'Out', inscritos: 27, encaminhados: 21, elegiveis: 21, inseridos: 0 }
   ],
   frequenciaMensal: [
     { mes: 'Fev', frequencia: 88.5, meta: 85.0 },
