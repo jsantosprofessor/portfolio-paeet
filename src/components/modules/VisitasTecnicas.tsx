@@ -16,7 +16,33 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { StorytellingCard } from '../common/StorytellingCard';
-import { VisitaTecnica } from '../../types';
+const CAVEX_PHOTO_METADATA: Record<string, { titulo: string; legenda: string; desc: string }> = {
+  '/cavex/cavex_fachada_oficial_23_abril_2026.jpg': {
+    titulo: 'Comitiva Oficial na Fachada Principal do CAvEx',
+    legenda: 'Delegação Escolar na Entrada Principal',
+    desc: 'Estudantes da 2ª Série C DS e turmas técnicas Novotec reunidos com professores em frente ao pórtico e monumento histórico do Comando de Aviação do Exército em Taubaté/SP.'
+  },
+  '/cavex/cavex_auditorio_palestra_institucional.jpg': {
+    titulo: 'Recepção Institucional e Palestra no Auditório',
+    legenda: 'Auditório de Instrução Militar',
+    desc: 'Abertura oficial com oficiais do CAvEx abordando a história da aviação do Exército, missões táticas e carreiras de tecnologia em defesa nacional.'
+  },
+  '/cavex/cavex_divisao_de_simulacao.jpg': {
+    titulo: 'Divisão de Simulação — Centro de Instrução de Aviação (CIAvEx)',
+    legenda: 'Simuladores de Voo Sintético',
+    desc: 'Demonstração dos simuladores de voo de asa rotativa de alta fidelidade e infraestrutura de redes computacionais para treinamento tático.'
+  },
+  '/cavex/cavex_hangar_helicoptero_militar.jpg': {
+    titulo: 'Hangar de Manutenção — Helicóptero Militar e Aviônica',
+    legenda: 'Hangar de Aeronaves e Aviônica',
+    desc: 'Imersão técnica com helicópteros militares (Jaguar / Pantera), inspeção detalhada de painéis digitais de bordo, sensores e aviônica de combate.'
+  },
+  '/cavex/cavex_oficina_turbina_safran.jpg': {
+    titulo: 'Oficina de Manutenção de Turbinas e Motores (Safran Turbomeca)',
+    legenda: 'Oficina de Propulsão Aeronáutica',
+    desc: 'Visita às bancadas de teste e manutenção de turbinas turboeixo de alta tecnologia Safran, integrando controle mecânico e automação.'
+  }
+};
 
 export const VisitasTecnicas: React.FC = () => {
   const { visitasList, setLightboxEvidence, evidenciasList } = useApp();
@@ -182,42 +208,64 @@ export const VisitasTecnicas: React.FC = () => {
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
                 <Camera className="w-4 h-4 text-cyan-400" />
-                Registros Fotográficos Comprobatórios — Visita CAVEX
+                Registros Fotográficos Comprobatórios — Visita CAVEX ({selectedVisita.fotos?.length || 0} fotos)
               </h4>
-              <span className="text-xs text-slate-400">Clique para ampliar</span>
+              <span className="text-xs text-slate-400">Clique em qualquer foto para ampliar</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {selectedVisita.fotos?.map((fotoUrl, i) => (
-                <div
-                  key={i}
-                  onClick={() =>
-                    setLightboxEvidence({
-                      id: `cavex-foto-${i}`,
-                      titulo: `Visita Técnica CAVEX — Registro ${i + 1}`,
-                      descricao: `Estudantes dos cursos técnicos do Novotec no Comando de Aviação do Exército em Taubaté. Demonstração de aviônica e simuladores.`,
-                      categoria: 'Visitas Técnicas',
-                      tipo: 'Imagem',
-                      data: '2025-05-15',
-                      url: fotoUrl,
-                      responsavel: 'Prof. Jefferson Santos (PAEET)',
-                      publicoAutorizado: true
-                    })
-                  }
-                  className="group relative h-48 rounded-xl overflow-hidden cursor-pointer border border-slate-800"
-                >
-                  <img
-                    src={fotoUrl}
-                    alt={`Foto CAVEX ${i + 1}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
-                    <span className="text-[11px] font-semibold text-white">
-                      Registro Comprobatório #{i + 1}
-                    </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {selectedVisita.fotos?.map((fotoUrl, i) => {
+                const info = CAVEX_PHOTO_METADATA[fotoUrl] || {
+                  titulo: `Visita Técnica CAVEX — Registro ${i + 1}`,
+                  legenda: `Registro Comprobatório #${i + 1}`,
+                  desc: `Estudantes dos cursos técnicos do Novotec no Comando de Aviação do Exército em Taubaté.`
+                };
+                const isHighlight = i === 0;
+
+                return (
+                  <div
+                    key={i}
+                    onClick={() =>
+                      setLightboxEvidence({
+                        id: `cavex-foto-${i}`,
+                        titulo: info.titulo,
+                        descricao: info.desc,
+                        categoria: 'Visitas Técnicas',
+                        tipo: 'Imagem',
+                        data: selectedVisita.dataEfetiva || '2025-05-15',
+                        url: fotoUrl,
+                        responsavel: 'Prof. Jefferson Santos (PAEET)',
+                        publicoAutorizado: true
+                      })
+                    }
+                    className={`group relative rounded-xl overflow-hidden cursor-pointer border border-slate-800 bg-slate-900/60 shadow-lg hover:border-cyan-500/50 transition-all duration-300 ${
+                      isHighlight ? 'sm:col-span-2 lg:col-span-2 h-72' : 'h-72'
+                    }`}
+                  >
+                    <img
+                      src={fotoUrl}
+                      alt={info.titulo}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-4">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                          {info.legenda}
+                        </span>
+                        <span className="text-[10px] text-slate-300 flex items-center gap-1 font-mono">
+                          <Camera className="w-3 h-3 text-cyan-400" /> #{i + 1}
+                        </span>
+                      </div>
+                      <h5 className="text-xs sm:text-sm font-bold text-white drop-shadow">
+                        {info.titulo}
+                      </h5>
+                      <p className="text-[11px] text-slate-300 line-clamp-2 mt-0.5 leading-relaxed">
+                        {info.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

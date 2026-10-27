@@ -332,9 +332,11 @@ export const initialVisitasTecnicas: VisitaTecnica[] = [
       { data: '2025-05-22', evento: 'Entrega do relatório pedagógico à Diretoria de Ensino e ofício de agradecimento', status: 'done' }
     ],
     fotos: [
-      'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80'
+      '/cavex/cavex_fachada_oficial_23_abril_2026.jpg',
+      '/cavex/cavex_auditorio_palestra_institucional.jpg',
+      '/cavex/cavex_divisao_de_simulacao.jpg',
+      '/cavex/cavex_hangar_helicoptero_militar.jpg',
+      '/cavex/cavex_oficina_turbina_safran.jpg'
     ],
     isEspecialCAVEX: true
   },
@@ -482,13 +484,61 @@ export const initialEvidencias: Evidencia[] = [
   },
   {
     id: 'ev-5',
-    titulo: 'Estudantes no Hangar do CIAvEx — Simulação e Aviônica',
-    descricao: 'Fotografia dos estudantes durante a demonstração técnica dos sistemas do helicóptero Jaguar no CAVEX Taubaté.',
+    titulo: 'Comitiva Oficial em Frente ao Comando de Aviação do Exército (CAVEX)',
+    descricao: 'Fotografia oficial de toda a delegação escolar de estudantes e professores no portão principal de acesso ao CAvEx em Taubaté/SP.',
     categoria: 'Visitas Técnicas',
     tipo: 'Imagem',
     data: '2025-05-15',
-    url: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
-    turmaRelacionada: '2ª A DS e 3ª A DS',
+    url: '/cavex/cavex_fachada_oficial_23_abril_2026.jpg',
+    turmaRelacionada: '2ª Série C DS e turmas Novotec',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-5b',
+    titulo: 'Demonstração Técnica no Hangar do CAVEX — Helicóptero Militar',
+    descricao: 'Fotografia dos estudantes durante a demonstração técnica dos sistemas do helicóptero Jaguar e aviônica de bordo.',
+    categoria: 'Visitas Técnicas',
+    tipo: 'Imagem',
+    data: '2025-05-15',
+    url: '/cavex/cavex_hangar_helicoptero_militar.jpg',
+    turmaRelacionada: '2ª Série C DS',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-5c',
+    titulo: 'Divisão de Simulação — Centro de Instrução de Aviação (CIAvEx)',
+    descricao: 'Imersão no centro de simuladores de voo de asa rotativa e estações de treinamento sintético militar.',
+    categoria: 'Visitas Técnicas',
+    tipo: 'Imagem',
+    data: '2025-05-15',
+    url: '/cavex/cavex_divisao_de_simulacao.jpg',
+    turmaRelacionada: '2ª Série C DS',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-5d',
+    titulo: 'Oficina de Manutenção de Motores e Turbinas Safran',
+    descricao: 'Aula prática de manutenção aeronáutica com engenheiros militares e técnicos de propulsão.',
+    categoria: 'Visitas Técnicas',
+    tipo: 'Imagem',
+    data: '2025-05-15',
+    url: '/cavex/cavex_oficina_turbina_safran.jpg',
+    turmaRelacionada: '2ª Série C DS',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
+  {
+    id: 'ev-5e',
+    titulo: 'Auditório — Recepção e Palestra Institucional do Comando',
+    descricao: 'Abertura oficial da visita pedagógica com apresentação da história, missões e tecnologia das Forças Armadas.',
+    categoria: 'Visitas Técnicas',
+    tipo: 'Imagem',
+    data: '2025-05-15',
+    url: '/cavex/cavex_auditorio_palestra_institucional.jpg',
+    turmaRelacionada: '2ª Série C DS',
     responsavel: 'Prof. Jefferson Santos (PAEET)',
     publicoAutorizado: true
   },

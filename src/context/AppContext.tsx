@@ -146,12 +146,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [visitasList, setVisitasList] = useState<VisitaTecnica[]>(() => {
-    const saved = localStorage.getItem('paeet_visitas');
+    const saved = localStorage.getItem('paeet_visitas_v2');
     return saved ? JSON.parse(saved) : initialVisitasTecnicas;
   });
 
   const [evidenciasList, setEvidenciasList] = useState<Evidencia[]>(() => {
-    const saved = localStorage.getItem('paeet_evidencias');
+    const saved = localStorage.getItem('paeet_evidencias_v2');
     return saved ? JSON.parse(saved) : initialEvidencias;
   });
 
@@ -197,7 +197,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_busca_ativa_v3', JSON.stringify(buscaAtivaList));
   }, [buscaAtivaList]);
   useEffect(() => {
-    localStorage.setItem('paeet_evidencias', JSON.stringify(evidenciasList));
+    localStorage.setItem('paeet_visitas_v2', JSON.stringify(visitasList));
+  }, [visitasList]);
+  useEffect(() => {
+    localStorage.setItem('paeet_evidencias_v2', JSON.stringify(evidenciasList));
   }, [evidenciasList]);
   useEffect(() => {
     localStorage.setItem('paeet_reconhecimentos', JSON.stringify(reconhecimentosList));
