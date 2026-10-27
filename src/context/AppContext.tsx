@@ -77,6 +77,7 @@ interface AppContextType {
   setIsMobileMenuOpen: (val: boolean) => void;
   // Mutations
   addEmpresa: (empresa: Omit<EmpresaParceira, 'id' | 'historicoTratativas' | 'estagiariosAtivos'>) => void;
+  deleteEmpresa: (id: string) => void;
   addTratativa: (empresaId: string, tratativa: Omit<TratativaHistorico, 'id'>) => void;
   addBuscaAtiva: (registro: Omit<RegistroBuscaAtiva, 'id'>) => void;
   updateBuscaAtiva: (id: string, registro: Partial<RegistroBuscaAtiva>) => void;
@@ -262,6 +263,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setEmpresas(prev => [nova, ...prev]);
     showToast(`Empresa "${nova.nome}" cadastrada com sucesso!`);
+  };
+
+  const deleteEmpresa = (id: string) => {
+    setEmpresas(prev => prev.filter(emp => emp.id !== id));
+    showToast('Empresa removida com sucesso.');
   };
 
   const addTratativa = (empresaId: string, tratativa: Omit<TratativaHistorico, 'id'>) => {
@@ -472,6 +478,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isMobileMenuOpen,
         setIsMobileMenuOpen,
         addEmpresa,
+        deleteEmpresa,
         addTratativa,
         addBuscaAtiva,
         updateBuscaAtiva,
