@@ -7,6 +7,7 @@ import {
   AcaoItinerario,
   RegistroBuscaAtiva,
   VisitaTecnica,
+  ProspeccaoVisitaTecnica,
   BoletimEstudante,
   Evidencia,
   Reconhecimento,
@@ -279,25 +280,119 @@ export const initialVisitasTecnicas: VisitaTecnica[] = [
       '/cavex/cavex_oficina_turbina_safran.jpg'
     ],
     isEspecialCAVEX: true
+  }
+];
+
+export const initialProspeccoesVisitas: ProspeccaoVisitaTecnica[] = [
+  {
+    id: 'prosp-1',
+    local: 'INPE — Instituto Nacional de Pesquisas Espaciais',
+    link: undefined,
+    dataContato: '11/jun',
+    retorno: 'Sim',
+    agendamento: '24/set',
+    informacoes: 'Conseguimos para 24/09, mas devido prova paulista e convocação na EFAPE a São Paulo tivemos que cancelar.',
+    categoriaStatus: 'Cancelada - Motivo Logístico',
+    badgeColor: 'border-amber-500/30 text-amber-300 bg-amber-500/10'
   },
   {
-    id: 'vt-pctec',
-    instituicao: 'Parque Tecnológico de São José dos Campos (PqTec)',
-    cidade: 'São José dos Campos - SP',
-    dataPrevista: '2025-06-20',
-    dataEfetiva: '2025-06-20',
-    responsavelInstituicao: 'Coordenação de Inovação Aberta do Nexus PqTec',
-    objetivoPedagogico: 'Apresentar aos estudantes o ecossistema de startups, centros de pesquisa e laboratórios de manufatura aditiva (FabLab), estimulando o protagonismo juvenil e o empreendedorismo.',
-    turmasParticipantes: ['2ª Série A DS', '2ª Série B ADM'],
-    totalEstudantes: 52,
-    status: 'Realizada',
-    relatorioResumo: 'Estudantes participaram de painel sobre carreiras em TI e visitaram empresas incubadas que trabalham com inteligência artificial e ERPs corporativos.',
-    competenciasDesenvolvidas: ['Empreendedorismo e Inovação', 'Inteligência Artificial', 'Pitch de Projetos'],
-    linhaDoTempo: [
-      { data: '2025-04-15', evento: 'Tratativa com o time de relações corporativas do Parque Tecnológico', status: 'done' },
-      { data: '2025-05-02', evento: 'Homologação e reserva dos laboratórios do FabLab', status: 'done' },
-      { data: '2025-06-20', evento: 'Realização da visita técnica e dinâmica de ideação', status: 'done' }
-    ]
+    id: 'prosp-2',
+    local: 'IBM',
+    link: undefined,
+    dataContato: '21/set',
+    retorno: 'Sim',
+    agendamento: undefined,
+    informacoes: 'Não está recebendo visitas no momento.',
+    categoriaStatus: 'Não Disponível Institucionalmente',
+    badgeColor: 'border-slate-500/30 text-slate-300 bg-slate-500/10'
+  },
+  {
+    id: 'prosp-3',
+    local: 'Parque Tecnológico Univap',
+    link: undefined,
+    dataContato: '23/set',
+    retorno: 'Não',
+    agendamento: '19/out',
+    informacoes: 'Retornou e falou não haver possibilidade de visita de alunos.',
+    categoriaStatus: 'Não Disponível Institucionalmente',
+    badgeColor: 'border-slate-500/30 text-slate-300 bg-slate-500/10'
+  },
+  {
+    id: 'prosp-4',
+    local: 'EMBRAER',
+    link: undefined,
+    dataContato: '11/jun',
+    retorno: 'Sim',
+    agendamento: undefined,
+    informacoes: 'Retorno institucional positivo; aguardando abertura de calendário de visitas escolares.',
+    categoriaStatus: 'Em Tratativa',
+    badgeColor: 'border-blue-500/30 text-blue-300 bg-blue-500/10'
+  },
+  {
+    id: 'prosp-5',
+    local: 'CEBRACE',
+    link: undefined,
+    dataContato: '20/ago',
+    retorno: 'Não',
+    agendamento: undefined,
+    informacoes: 'Prospecção formal protocolada junto ao RH e Relações Corporativas; aguardando retorno.',
+    categoriaStatus: 'Aguardando Retorno',
+    badgeColor: 'border-slate-600/30 text-slate-400 bg-slate-800/40'
+  },
+  {
+    id: 'prosp-6',
+    local: 'HITT — Hub de Inovação Tecnológica de Taubaté',
+    link: undefined,
+    dataContato: '01/set',
+    retorno: 'Não',
+    agendamento: undefined,
+    informacoes: 'Proposta de visita institucional e workshops de inovação para alunos do Novotec.',
+    categoriaStatus: 'Aguardando Retorno',
+    badgeColor: 'border-slate-600/30 text-slate-400 bg-slate-800/40'
+  },
+  {
+    id: 'prosp-7',
+    local: 'TOTVS',
+    link: undefined,
+    dataContato: 'Prospecção',
+    retorno: 'Em Análise',
+    agendamento: undefined,
+    informacoes: 'Prospecção institucional em andamento para imersão em desenvolvimento de sistemas ERP.',
+    categoriaStatus: 'Em Tratativa',
+    badgeColor: 'border-blue-500/30 text-blue-300 bg-blue-500/10'
+  },
+  {
+    id: 'prosp-8',
+    local: 'Parque tecnológico de Santo André',
+    link: 'https://parquetecsa.org.br/visitas-tecnicas/#form',
+    dataContato: '01/out',
+    retorno: 'Sim',
+    agendamento: '03/nov',
+    informacoes: 'Foi Cancelado Devido não ter verba de transporte na URE.',
+    categoriaStatus: 'Cancelada - Motivo Logístico',
+    badgeColor: 'border-rose-500/30 text-rose-300 bg-rose-500/10'
+  },
+  {
+    id: 'prosp-9',
+    local: 'Centro Nacional de Processamento de Alto Desempenho em São Paulo (CENAPAD / Unicamp)',
+    link: 'https://www.cenapad.unicamp.br/institucional/visitas',
+    dataContato: '01/out',
+    retorno: 'Não',
+    agendamento: undefined,
+    informacoes: 'Solicitação protocolada via canal oficial institucional para visita à supercomputação.',
+    categoriaStatus: 'Aguardando Retorno',
+    badgeColor: 'border-slate-600/30 text-slate-400 bg-slate-800/40'
+  },
+  {
+    id: 'prosp-10',
+    local: 'CI&T Portas abertas',
+    link: 'https://ciandt.com/br/pt-br/ciandt-portas-abertas',
+    dataContato: '01/out',
+    retorno: 'Não',
+    agendamento: undefined,
+    informacoes: 'Inscrição protocolada na plataforma corporativa Portas Abertas da CI&T.',
+    categoriaStatus: 'Aguardando Retorno',
+    badgeColor: 'border-slate-600/30 text-slate-400 bg-slate-800/40'
   }
 ];
 
@@ -374,6 +469,17 @@ export const initialImportBatches: ImportBatch[] = [
 
 
 export const initialEvidencias: Evidencia[] = [
+  {
+    id: 'ev-visitas-planilha-tratativas',
+    titulo: 'Mapeamento e Planilha de Tratativas de Visitas Técnicas — PAEET',
+    descricao: 'Controle sistemático de prospecção com 10 instituições (INPE, IBM, Univap, EMBRAER, CEBRACE, HITT, TOTVS, Sto. André, CENAPAD/Unicamp, CI&T), datas de contato, confirmações e justificativas oficiais de contingências.',
+    categoria: 'Visitas Técnicas',
+    tipo: 'Documento',
+    data: '2026-10-27',
+    url: '/visitas/planilha_tratativas_visitas_tecnicas.png',
+    responsavel: 'Prof. Jefferson Santos (PAEET)',
+    publicoAutorizado: true
+  },
   {
     id: 'ev-beem-ciee-painel',
     titulo: 'Painel Institucional CIEE / BEEM — Gestão Escolar (Prof. Jefferson Santos)',

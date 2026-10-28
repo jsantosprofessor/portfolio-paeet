@@ -136,6 +136,18 @@ export interface VisitaTecnica {
   isEspecialCAVEX?: boolean;
 }
 
+export interface ProspeccaoVisitaTecnica {
+  id: string;
+  local: string;
+  link?: string;
+  dataContato: string;
+  retorno: 'Sim' | 'Não' | 'Em Análise';
+  agendamento?: string;
+  informacoes: string;
+  categoriaStatus: 'Realizada' | 'Cancelada - Motivo Logístico' | 'Não Disponível Institucionalmente' | 'Em Tratativa' | 'Aguardando Retorno';
+  badgeColor?: string;
+}
+
 export interface NotaDisciplina {
   disciplina: string;
   b1: number;

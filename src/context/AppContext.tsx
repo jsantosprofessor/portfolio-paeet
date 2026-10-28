@@ -10,6 +10,7 @@ import {
   AcaoItinerario,
   RegistroBuscaAtiva,
   VisitaTecnica,
+  ProspeccaoVisitaTecnica,
   Evidencia,
   Reconhecimento,
   FiltrosGlobais,
@@ -28,6 +29,7 @@ import {
   initialAcoesItinerario,
   initialBuscaAtiva,
   initialVisitasTecnicas,
+  initialProspeccoesVisitas,
   initialEvidencias,
   initialReconhecimentos,
   initialBoletins,
@@ -61,6 +63,7 @@ interface AppContextType {
   acoesItinerario: AcaoItinerario[];
   buscaAtivaList: RegistroBuscaAtiva[];
   visitasList: VisitaTecnica[];
+  prospeccoesVisitas: ProspeccaoVisitaTecnica[];
   evidenciasList: Evidencia[];
   reconhecimentosList: Reconhecimento[];
   boletins: BoletimEstudante[];
@@ -147,12 +150,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [visitasList, setVisitasList] = useState<VisitaTecnica[]>(() => {
-    const saved = localStorage.getItem('paeet_visitas_v2');
+    const saved = localStorage.getItem('paeet_visitas_v3');
     return saved ? JSON.parse(saved) : initialVisitasTecnicas;
   });
 
+  const [prospeccoesVisitas] = useState<ProspeccaoVisitaTecnica[]>(initialProspeccoesVisitas);
+
   const [evidenciasList, setEvidenciasList] = useState<Evidencia[]>(() => {
-    const saved = localStorage.getItem('paeet_evidencias_v3');
+    const saved = localStorage.getItem('paeet_evidencias_v4');
     return saved ? JSON.parse(saved) : initialEvidencias;
   });
 
@@ -198,10 +203,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_busca_ativa_v3', JSON.stringify(buscaAtivaList));
   }, [buscaAtivaList]);
   useEffect(() => {
-    localStorage.setItem('paeet_visitas_v2', JSON.stringify(visitasList));
+    localStorage.setItem('paeet_visitas_v3', JSON.stringify(visitasList));
   }, [visitasList]);
   useEffect(() => {
-    localStorage.setItem('paeet_evidencias_v3', JSON.stringify(evidenciasList));
+    localStorage.setItem('paeet_evidencias_v4', JSON.stringify(evidenciasList));
   }, [evidenciasList]);
   useEffect(() => {
     localStorage.setItem('paeet_reconhecimentos', JSON.stringify(reconhecimentosList));
@@ -463,6 +468,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         acoesItinerario,
         buscaAtivaList,
         visitasList,
+        prospeccoesVisitas,
         evidenciasList,
         reconhecimentosList,
         boletins,
