@@ -245,29 +245,29 @@ export const DashboardGeral: React.FC = () => {
         />
         <StatCard
           title="Empresas Parceiras"
-          value={38}
+          value={3}
           icon={Building2}
           iconColor="text-purple-400"
           glowColor="from-purple-500/20 to-transparent"
-          trend={{ value: "+13", positive: true, label: "Novos convênios" }}
+          trend={{ value: "CIEE, EVORH, Central", positive: true, label: "Prospecção ativa" }}
           onClick={() => setActiveModule('empresas')}
         />
         <StatCard
           title="Visitas Técnicas"
-          value={12}
+          value={1}
           icon={Compass}
           iconColor="text-rose-400"
           glowColor="from-rose-500/20 to-transparent"
-          trend={{ value: "CAVEX / PqTec", positive: true, label: "100% Executadas" }}
+          trend={{ value: "CAvEx — SJC", positive: true, label: "100% Executada" }}
           onClick={() => setActiveModule('visitas')}
         />
         <StatCard
           title="Certificados Emitidos"
-          value={115}
+          value={11}
           icon={Award}
           iconColor="text-amber-300"
           glowColor="from-amber-500/20 to-transparent"
-          trend={{ value: "Mérito Técnico", positive: true, label: "Solenidade 2025" }}
+          trend={{ value: "Protagonismo Juvenil", positive: true, label: "Nota ≥ 9 • Dia TI" }}
           onClick={() => setActiveModule('certificacao')}
         />
       </div>

@@ -90,132 +90,69 @@ export const initialEstudantes: Estudante[] = alunosAtivosMonsenhor.map(aluno =>
 export const initialEmpresas: EmpresaParceira[] = [
   {
     id: 'emp-1',
-    nome: 'Embraer S.A.',
-    razaoSocial: 'Embraer S.A. Indústria Aeronáutica',
-    segmento: 'Aeroespacial & Tecnologia',
-    cidade: 'São José dos Campos - SP',
-    responsavelContato: 'Mariana Duarte',
-    cargoContato: 'Gerente de Talent Acquisition & ESG',
-    emailContato: 'estagios.vale@embraer.com.br',
-    telefoneContato: '(12) 3927-1000',
-    dataPrimeiroContato: '2025-02-14',
-    tipoContato: 'Visita Presencial',
+    nome: 'CIEE — Centro de Integração Empresa-Escola',
+    razaoSocial: 'Centro de Integração Empresa-Escola - CIEE',
+    segmento: 'Agente de Integração de Estágio',
+    cidade: 'Taubaté - SP',
+    responsavelContato: 'Equipe de Atendimento e Relacionamento Institucional',
+    cargoContato: 'Consultor de Parcerias Escolares',
+    emailContato: 'atendimento@ciee.org.br',
+    telefoneContato: '(12) 3632-0000 / 0800 771 2433',
+    dataPrimeiroContato: '2026-02-10',
+    tipoContato: 'Reunião Online',
     statusNegociacao: 'Parceria Ativa',
-    vagasOfertadas: 8,
-    estagiariosAtivos: 6,
-    estrategiaAdotada: 'Reunião de alinhamento com RH e diretoria técnica para apresentar a matriz curricular do curso de Desenvolvimento de Sistemas e competências dos alunos.',
-    proximaAcao: 'Ampliação de vagas do BEEM para a turma de Redes de Computadores no próximo semestre.',
+    vagasOfertadas: 0,
+    estagiariosAtivos: 0,
+    estrategiaAdotada: 'Cadastro institucional da escola e dos alunos na plataforma CIEE. Articulação contínua para identificação de vagas de estágio compatíveis com a jornada de 9 horas diárias da PEI ou oportunidades de jovem aprendiz aos finais de semana / contra-turno flexível.',
+    proximaAcao: 'Acompanhar publicação de novos editais de estágio público e privado com jornada compatível.',
     historicoTratativas: [
-      { id: 'tr-1', data: '2025-02-14', tipo: 'Visita', descricao: 'Reunião presencial na sede da Embraer em SJC. Apresentação do programa Novotec/BEEM.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Positivo' },
-      { id: 'tr-2', data: '2025-03-02', tipo: 'E-mail', descricao: 'Envio formal da ementa das disciplinas de Banco de Dados e Programação Web.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Concluído' },
-      { id: 'tr-3', data: '2025-03-20', tipo: 'Reunião', descricao: 'Homologação do convênio com a SEDUC e agendamento dos testes técnicos com os estudantes.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Concluído' }
+      { id: 'tr-ciee-1', data: '2026-02-10', tipo: 'Reunião', descricao: 'Credenciamento da unidade escolar e alinhamento do perfil dos alunos do curso de Desenvolvimento de Sistemas.', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Concluído' },
+      { id: 'tr-ciee-2', data: '2026-04-15', tipo: 'E-mail', descricao: 'Consulta de compatibilidade de jornada de estágio com o regime de tempo integral (PEI 9h).', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Positivo' },
+      { id: 'tr-ciee-3', data: '2026-08-20', tipo: 'Reunião', descricao: 'Alinhamento semestral de vagas e verificação de cadastros dos 27 estudantes da turma de DS.', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Concluído' }
     ]
   },
   {
     id: 'emp-2',
-    nome: 'Stefanini IT Solutions',
-    razaoSocial: 'Stefanini Consultoria e Assessoria em Informática S.A.',
-    segmento: 'Tecnologia da Informação & Software',
-    cidade: 'São José dos Campos - SP',
-    responsavelContato: 'Rodrigo Pires da Silva',
-    cargoContato: 'Líder Técnico de Operações',
-    emailContato: 'rodrigo.pires@stefanini.com',
-    telefoneContato: '(12) 99182-4433',
-    dataPrimeiroContato: '2025-02-22',
-    tipoContato: 'Reunião Online',
-    statusNegociacao: 'Parceria Ativa',
-    vagasOfertadas: 10,
-    estagiariosAtivos: 8,
-    estrategiaAdotada: 'Articulação direta com gestores de projetos de software para alocar estudantes no suporte à sustentação de sistemas e automação.',
-    proximaAcao: 'Acompanhamento bimestral de desempenho com os tutores corporativos da Stefanini.',
+    nome: 'EVORH — Gestão de Pessoas',
+    razaoSocial: 'EVORH Soluções em Recursos Humanos Ltda.',
+    segmento: 'Consultoria de RH & Recrutamento',
+    cidade: 'Taubaté - SP',
+    responsavelContato: 'Coordenação de Recrutamento & Seleção',
+    cargoContato: 'Especialista em Captação de Talentos',
+    emailContato: 'contato@evorh.com.br',
+    telefoneContato: '(12) 3631-5500',
+    dataPrimeiroContato: '2026-05-08',
+    tipoContato: 'WhatsApp',
+    statusNegociacao: 'Em Tratativa',
+    vagasOfertadas: 0,
+    estagiariosAtivos: 0,
+    estrategiaAdotada: 'Apresentação da grade curricular do curso Técnico em Desenvolvimento de Sistemas e envio de perfil de competências da turma de DS Novotec para o banco de talentos da consultoria.',
+    proximaAcao: 'Mapeamento de empresas clientes da EVORH na região do Vale do Paraíba com interesse em talentos juniores de tecnologia.',
     historicoTratativas: [
-      { id: 'tr-4', data: '2025-02-22', tipo: 'Reunião', descricao: 'Alinhamento virtual sobre o perfil dos estudantes do 2º e 3º ano de Desenvolvimento de Sistemas.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Positivo' },
-      { id: 'tr-5', data: '2025-03-11', tipo: 'WhatsApp', descricao: 'Confirmação do processo seletivo simplificado para 10 bolsas BEEM.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Concluído' }
+      { id: 'tr-evorh-1', data: '2026-05-08', tipo: 'WhatsApp', descricao: 'Primeiro contato com o RH da EVORH apresentando o programa PAEET e as competências dos estudantes de DS.', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Positivo' },
+      { id: 'tr-evorh-2', data: '2026-06-12', tipo: 'E-mail', descricao: 'Envio da relação de competências técnicas dos alunos (Lógica, Programação Web, Banco de Dados, Metodologias Ágeis).', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Em Espera' }
     ]
   },
   {
     id: 'emp-3',
-    nome: 'TOTVS Vale do Paraíba',
-    razaoSocial: 'TOTVS S.A. Polo Regional Tecnológico',
-    segmento: 'Sistemas de Gestão ERP & Cloud',
-    cidade: 'São José dos Campos - SP',
-    responsavelContato: 'Aline Menezes Castro',
-    cargoContato: 'Coordenadora de Parcerias Educacionais',
-    emailContato: 'aline.menezes@totvs.com.br',
-    telefoneContato: '(12) 3901-8800',
-    dataPrimeiroContato: '2025-03-05',
-    tipoContato: 'E-mail',
-    statusNegociacao: 'Termo de Compromisso Aberto',
-    vagasOfertadas: 6,
-    estagiariosAtivos: 4,
-    estrategiaAdotada: 'Envio de portfólio digital dos estudantes e articulação de workshop com os alunos.',
-    proximaAcao: 'Coleta de assinaturas dos termos de compromisso de estágio BEEM via CIEE/SEDUC.',
-    historicoTratativas: [
-      { id: 'tr-6', data: '2025-03-05', tipo: 'E-mail', descricao: 'Contato inicial propondo abertura de vagas de estágio para as turmas técnicas.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Positivo' },
-      { id: 'tr-7', data: '2025-03-18', tipo: 'WhatsApp', descricao: 'Envio da relação de alunos pré-selecionados com melhor assiduidade e notas.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Positivo' }
-    ]
-  },
-  {
-    id: 'emp-4',
-    nome: 'Johnson & Johnson / Kenvue',
-    razaoSocial: 'Kenvue Brasil Ltda.',
-    segmento: 'Indústria Farmacêutica & Supply Chain',
-    cidade: 'São José dos Campos - SP',
-    responsavelContato: 'Carlos Eduardo Ramos',
-    cargoContato: 'Supervisor de Logística e RH',
-    emailContato: 'carlos.ramos@kenvue.com',
-    telefoneContato: '(12) 3932-5000',
-    dataPrimeiroContato: '2025-03-15',
-    tipoContato: 'Visita Presencial',
-    statusNegociacao: 'Parceria Ativa',
-    vagasOfertadas: 6,
-    estagiariosAtivos: 5,
-    estrategiaAdotada: 'Foco na inserção de alunos dos cursos de Logística e Administração no controle de fluxos de insumos hospitalares.',
-    proximaAcao: 'Visita dos gestores da empresa à feira técnica escolar.',
-    historicoTratativas: [
-      { id: 'tr-8', data: '2025-03-15', tipo: 'Visita', descricao: 'Encontro com o time de Supply Chain para alinhar requisitos de estágio.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Positivo' }
-    ]
-  },
-  {
-    id: 'emp-5',
-    nome: 'Gerdau — Unidade Pindamonhangaba',
-    razaoSocial: 'Gerdau Aços Longos S.A.',
-    segmento: 'Siderurgia & Automação Industrial',
-    cidade: 'Pindamonhangaba - SP',
-    responsavelContato: 'Juliana Barbosa',
-    cargoContato: 'Especialista em Desenvolvimento Comunitário',
-    emailContato: 'juliana.barbosa@gerdau.com.br',
-    telefoneContato: '(12) 3644-9000',
-    dataPrimeiroContato: '2025-04-02',
-    tipoContato: 'Reunião Online',
-    statusNegociacao: 'Parceria Ativa',
-    vagasOfertadas: 5,
-    estagiariosAtivos: 4,
-    estrategiaAdotada: 'Abertura de vagas para manutenção de redes e automação de processos internos.',
-    proximaAcao: 'Supervisão do primeiro mês de estágio dos estudantes inseridos.',
-    historicoTratativas: [
-      { id: 'tr-9', data: '2025-04-02', tipo: 'Reunião', descricao: 'Definição do cronograma de integração dos estudantes.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Concluído' }
-    ]
-  },
-  {
-    id: 'emp-6',
-    nome: 'Magneti Marelli Brasil',
-    razaoSocial: 'Marelli Sistemas Automotivos Indústria e Comércio',
-    segmento: 'Autopeças & Engenharia Automotiva',
+    nome: 'Central do Estágio',
+    razaoSocial: 'Central do Estágio Agenciamento e Integração Ltda.',
+    segmento: 'Agente de Integração de Estágio',
     cidade: 'Taubaté - SP',
-    responsavelContato: 'Fábio Antunes',
-    cargoContato: 'Coordenador de TI & Fábrica Inteligente',
-    emailContato: 'fabio.antunes@marelli.com',
-    telefoneContato: '(12) 3625-1100',
-    dataPrimeiroContato: '2025-04-10',
-    tipoContato: 'Telefone',
+    responsavelContato: 'Setor de Convênios Escolares',
+    cargoContato: 'Analista de Parcerias Educacionais',
+    emailContato: 'convenios@centraldoestagio.com.br',
+    telefoneContato: '(12) 3622-4400',
+    dataPrimeiroContato: '2026-09-10',
+    tipoContato: 'WhatsApp',
     statusNegociacao: 'Em Tratativa',
-    vagasOfertadas: 4,
-    estagiariosAtivos: 2,
-    estrategiaAdotada: 'Apresentação das competências em IoT e programação dos alunos para o projeto de Indústria 4.0 da empresa.',
-    proximaAcao: 'Receber feedback das entrevistas com os candidatos enviados.',
+    vagasOfertadas: 0,
+    estagiariosAtivos: 0,
+    estrategiaAdotada: 'Contato para abertura de canal de comunicação e análise de convênios para oportunidades de estágio e inserção profissional de jovens no ensino técnico.',
+    proximaAcao: 'Reunião virtual para apresentação das diretrizes de estágio supervisionado do Novo Ensino Médio Paulista.',
     historicoTratativas: [
-      { id: 'tr-10', data: '2025-04-10', tipo: 'Ligação', descricao: 'Alinhamento com a engenharia da Marelli sobre perfil de estagiários.', responsavel: 'Prof. Jefferson Santos', statusResultado: 'Em Espera' }
+      { id: 'tr-cde-1', data: '2026-09-10', tipo: 'WhatsApp', descricao: 'Contato inicial com a Central do Estágio apresentando a unidade escolar e o curso técnico de Desenvolvimento de Sistemas.', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Positivo' },
+      { id: 'tr-cde-2', data: '2026-10-05', tipo: 'E-mail', descricao: 'Envio de documentação institucional da escola para análise de minuta de convênio.', responsavel: 'Prof. Jefferson Santos (PAEET)', statusResultado: 'Em Espera' }
     ]
   }
 ];
@@ -681,19 +618,16 @@ export const dashboardChartData = {
     { name: 'Em Acompanhamento / Atenção', value: 24, color: '#F59E0B' },
     { name: 'Regressão Crítica', value: 8, color: '#EF4444' }
   ],
-  empresasPorSegmento: [
-    { segmento: 'TI & Software', total: 14, ativas: 11 },
-    { segmento: 'Aeroespacial & Defesa', total: 6, ativas: 5 },
-    { segmento: 'Logística & Supply Chain', total: 8, ativas: 6 },
-    { segmento: 'Indústria & Automação', total: 7, ativas: 5 },
-    { segmento: 'Serviços & Finanças', total: 5, ativas: 3 }
+    empresasPorSegmento: [
+    { segmento: 'Agentes de Integração', total: 2, ativas: 1 },
+    { segmento: 'Consultoria de RH', total: 1, ativas: 0 }
   ],
   comparativoMetas: [
-    { indicador: 'Estudantes no BEEM', meta: 70, alcancado: 84 },
-    { indicador: 'Empresas Conveniadas', meta: 25, alcancado: 38 },
-    { indicador: 'Visitas Técnicas', meta: 8, alcancado: 12 },
-    { indicador: 'Alunos Busca Ativa Regularizados', meta: 50, alcancado: 64 },
-    { indicador: 'Certificados Concedidos', meta: 80, alcancado: 115 }
+    { indicador: 'Alunos no BEEM (Inseridos)', meta: 5, alcancado: 0 },
+    { indicador: 'Empresas Parceiras / Em Tratativa', meta: 5, alcancado: 3 },
+    { indicador: 'Visitas Técnicas Realizadas', meta: 2, alcancado: 1 },
+    { indicador: 'Alunos Busca Ativa Regularizados', meta: 6, alcancado: 3 },
+    { indicador: 'Certificados Concedidos', meta: 11, alcancado: 11 }
   ]
 };
 

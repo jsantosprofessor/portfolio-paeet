@@ -132,7 +132,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [empresas, setEmpresas] = useState<EmpresaParceira[]>(() => {
-    const saved = localStorage.getItem('paeet_empresas');
+    const saved = localStorage.getItem('paeet_empresas_v2');
     return saved ? JSON.parse(saved) : initialEmpresas;
   });
 
@@ -192,7 +192,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('paeet_estudantes_v3', JSON.stringify(estudantes));
   }, [estudantes]);
   useEffect(() => {
-    localStorage.setItem('paeet_empresas', JSON.stringify(empresas));
+    localStorage.setItem('paeet_empresas_v2', JSON.stringify(empresas));
   }, [empresas]);
   useEffect(() => {
     localStorage.setItem('paeet_busca_ativa_v3', JSON.stringify(buscaAtivaList));
